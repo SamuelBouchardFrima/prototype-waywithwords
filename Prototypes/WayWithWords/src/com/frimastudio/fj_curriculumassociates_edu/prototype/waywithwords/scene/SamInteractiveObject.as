@@ -9,10 +9,10 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			var stateList:Vector.<InteractiveObjectState> = new Vector.<InteractiveObjectState>();
 			stateList.push(new InteractiveObjectState(0, "Petrified", new Asset.Sam00Bitmap(), "aSmt"));
 			stateList.push(new InteractiveObjectState(1, "Angry", new Asset.Sam02Bitmap(), "dmas"));
-			stateList.push(new InteractiveObjectState(3, "HotTired", new Asset.Sam03Bitmap(), "tnamf"));
-			stateList.push(new InteractiveObjectState(4, "Hot", new Asset.Sam04Bitmap(), "tnamf"));
-			stateList.push(new InteractiveObjectState(5, "Tired", new Asset.Sam05Bitmap(), "tnamf"));
-			stateList.push(new InteractiveObjectState(6, "Happy", new Asset.Sam06Bitmap()));
+			stateList.push(new InteractiveObjectState(2, "HotTired", new Asset.Sam03Bitmap(), "tnamf"));
+			stateList.push(new InteractiveObjectState(3, "Hot", new Asset.Sam04Bitmap(), "tnamf"));
+			stateList.push(new InteractiveObjectState(4, "Tired", new Asset.Sam05Bitmap(), "tnamf"));
+			stateList.push(new InteractiveObjectState(5, "Happy", new Asset.Sam06Bitmap()));
 			
 			super(stateList);
 		}

@@ -12,135 +12,188 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 	
 	public class InteractionInputWidget extends RetractableWidget
 	{
-		private var mWordFieldFormat:TextFormat;
-		private var mCurrentWordField:TextField;
+		private var mSelectedLetterList:Vector.<SelectableLetter>;
+		private var mSelectableLetterList:Vector.<SelectableLetter>;
 		private var mRewindButton:WidgetButton;
 		private var mSubmitButton:WidgetButton;
 		private var mEraseButton:WidgetButton;
-		private var mSelectableLetterList:Vector.<SelectableLetter>;
+		private var mCurrentWord:String;
 		
 		public function InteractionInputWidget(aRetractedAnchor:Point, aDeployedAnchor:Point, aLetterSelection:String = "")
 		{
 			super(aRetractedAnchor, aDeployedAnchor);
 			
-			mWordFieldFormat = new TextFormat();
-			mWordFieldFormat.size = 40;
-			mWordFieldFormat.bold = true;
-			
-			mCurrentWordField = new TextField();
-			mCurrentWordField.x = 200;
-			mCurrentWordField.y = -110;
-			mCurrentWordField.width = 200;
-			mCurrentWordField.height = 60;
-			mCurrentWordField.selectable = false;
-			mCurrentWordField.text = "";
-			mCurrentWordField.setTextFormat(mWordFieldFormat);
-			addChild(mCurrentWordField);
+			mSelectedLetterList = new Vector.<SelectableLetter>();
+			mSelectableLetterList = new Vector.<SelectableLetter>();
+			SetLetterSelection(aLetterSelection);
 			
 			var buttonRect:Rectangle = new Rectangle( -20, -20, 40, 40);
 			
 			mRewindButton = new WidgetButton("<", buttonRect, 0xCCCC00);
-			mRewindButton.x = 50;
+			mRewindButton.x = 15;
 			mRewindButton.y = -90;
 			mRewindButton.addEventListener(MouseEvent.CLICK, OnRewind);
 			addChild(mRewindButton);
 			
 			mSubmitButton = new WidgetButton(">", buttonRect, 0x00CC00);
-			mSubmitButton.x = 500;
+			mSubmitButton.x = 535;
 			mSubmitButton.y = -90;
 			mSubmitButton.addEventListener(MouseEvent.CLICK, OnSubmit);
 			addChild(mSubmitButton);
 			
 			mEraseButton = new WidgetButton("X", buttonRect, 0xCC0000);
-			mEraseButton.x = 550;
+			mEraseButton.x = 585;
 			mEraseButton.y = -90;
 			mEraseButton.addEventListener(MouseEvent.CLICK, OnErase);
 			addChild(mEraseButton);
-			
-			SetLetterSelection(aLetterSelection);
-		}
-		
-		public function SetLetterSelection(aLetterSelection:String):void
-		{
-			var i:int, end:int;
-			
-			var unscrambledList:Vector.<SelectableLetter> = new Vector.<SelectableLetter>();
-			for (i = 0, end = aLetterSelection.length; i < end; ++i)
-			{
-				unscrambledList.push(new SelectableLetter(aLetterSelection.charAt(i)));
-			}
-			
-			if (mSelectableLetterList)
-			{
-				for (i = 0, end = mSelectableLetterList.length; i < end; ++i)
-				{
-					mSelectableLetterList[i].removeEventListener(SelectableLetterEvent.SELECTED, OnLetterSelected);
-					removeChild(mSelectableLetterList[i]);
-				}
-			}
-			
-			mSelectableLetterList = new Vector.<SelectableLetter>();
-			var index:int;
-			while (unscrambledList.length > 0)
-			{
-				index = Random.RangeInt(0, unscrambledList.length - 1);
-				mSelectableLetterList.push(unscrambledList.splice(index, 1)[0]);
-			}
-			
-			for (i = 0, end = mSelectableLetterList.length; i < end; ++i)
-			{
-				mSelectableLetterList[i].x = (i * (mSelectableLetterList[i].width + 5)) -
-					((mSelectableLetterList[i].width + 5) * end / 2) + 350;
-				addChild(mSelectableLetterList[i]);
-				mSelectableLetterList[i].addEventListener(SelectableLetterEvent.SELECTED, OnLetterSelected);
-			}
 		}
 		
 		public function Dispose():void
 		{
+			ClearLetterLists();
+			
 			mSubmitButton.removeEventListener(MouseEvent.CLICK, OnSubmit);
 			mEraseButton.removeEventListener(MouseEvent.CLICK, OnErase);
-			for (var i:int = 0, end:int = mSelectableLetterList.length; i < end; ++i)
+		}
+		
+		public function SetLetterSelection(aLetterSelection:String):void
+		{
+			ClearLetterLists();
+			
+			var remainingLetters:String = aLetterSelection;
+			var i:int;
+			while (remainingLetters.length > 0)
 			{
-				mSelectableLetterList[i].removeEventListener(SelectableLetterEvent.SELECTED, OnLetterSelected);
+				i = Random.RangeInt(0, remainingLetters.length - 1);
+				AddSelectableLetter(remainingLetters.charAt(i));
+				remainingLetters = remainingLetters.substring(0, i) + remainingLetters.substr(i + 1);
+			}
+			
+			RefreshCurrentWord();
+		}
+		
+		private function ClearLetterLists():void 
+		{
+			var i:int, end:int;
+			
+			for (i = 0, end = mSelectedLetterList.length; i < end; ++i)
+			{
+				RemoveSelectedLetter(mSelectedLetterList[i], false);
+			}
+			for (i = 0, end = mSelectableLetterList.length; i < end; ++i)
+			{
+				RemoveSelectableLetter(mSelectableLetterList[i], false);
+			}
+			
+			mSelectedLetterList.splice(0, mSelectedLetterList.length);
+			mSelectableLetterList.splice(0, mSelectableLetterList.length);
+		}
+		
+		private function AddSelectedLetter(aCharacter:String):void
+		{
+			var selectedLetter:SelectableLetter = new SelectableLetter(aCharacter);
+			selectedLetter.x = (selectedLetter.width + 5) * mSelectedLetterList.length + 100;
+			selectedLetter.y = -90;
+			selectedLetter.addEventListener(SelectableLetterEvent.SELECTED, OnLetterUnselected);
+			mSelectedLetterList.push(selectedLetter);
+			addChild(selectedLetter);
+		}
+		
+		private function AddSelectableLetter(aCharacter:String):void
+		{
+			var selectableLetter:SelectableLetter = new SelectableLetter(aCharacter);
+			selectableLetter.x = (selectableLetter.width + 5) * mSelectableLetterList.length + 100;
+			selectableLetter.y = 10;
+			selectableLetter.addEventListener(SelectableLetterEvent.SELECTED, OnLetterSelected);
+			mSelectableLetterList.push(selectableLetter);
+			addChild(selectableLetter);
+		}
+		
+		private function RemoveSelectedLetter(aLetter:SelectableLetter, aAdjustList:Boolean = true):void
+		{
+			aLetter.removeEventListener(SelectableLetterEvent.SELECTED, OnLetterUnselected);
+			removeChild(aLetter);
+			
+			if (!aAdjustList)
+			{
+				return;
+			}
+			
+			var i:int = mSelectedLetterList.indexOf(aLetter);
+			mSelectedLetterList.splice(i, 1);
+			for (var end:int = mSelectedLetterList.length; i < end; ++i)
+			{
+				mSelectedLetterList[i].x -= mSelectedLetterList[i].width + 5;
+			}
+		}
+		
+		private function RemoveSelectableLetter(aLetter:SelectableLetter, aAdjustList:Boolean = true):void
+		{
+			aLetter.removeEventListener(SelectableLetterEvent.SELECTED, OnLetterSelected);
+			removeChild(aLetter);
+			
+			if (!aAdjustList)
+			{
+				return;
+			}
+			
+			var i:int = mSelectableLetterList.indexOf(aLetter);
+			mSelectableLetterList.splice(i, 1);
+			for (var end:int = mSelectableLetterList.length; i < end; ++i)
+			{
+				mSelectableLetterList[i].x -= mSelectableLetterList[i].width + 5;
+			}
+		}
+		
+		private function RefreshCurrentWord():void
+		{
+			mCurrentWord = "";
+			for (var i:int = 0, end:int = mSelectedLetterList.length; i < end; ++i)
+			{
+				mCurrentWord += mSelectedLetterList[i].Character;
 			}
 		}
 		
 		private function OnRewind(aEvent:MouseEvent):void
 		{
 			dispatchEvent(new InteractionInputEvent(InteractionInputEvent.REWIND));
-			Erase();
 		}
 		
 		private function OnSubmit(aEvent:MouseEvent):void
 		{
 			var event:InteractionInputEvent = new InteractionInputEvent(InteractionInputEvent.SUBMIT);
-			event.Input = mCurrentWordField.text;
+			event.Input = mCurrentWord;
 			dispatchEvent(event);
-			Erase();
 		}
 		
 		private function OnErase(aEvent:MouseEvent):void
 		{
-			Erase();
-		}
-		
-		private function Erase():void
-		{
-			mCurrentWordField.text = "";
-			for (var i:int = 0, end:int = mSelectableLetterList.length; i < end; ++i)
+			for (var i:int = 0, end:int = mSelectedLetterList.length; i < end; ++i)
 			{
-				mSelectableLetterList[i].Selected = false;
+				AddSelectableLetter(mSelectedLetterList[i].Character);
+				RemoveSelectedLetter(mSelectedLetterList[i], false);
 			}
+			mSelectedLetterList.splice(0, mSelectedLetterList.length);
+			
+			RefreshCurrentWord();
 		}
 		
 		private function OnLetterSelected(aEvent:SelectableLetterEvent):void
 		{
 			var selectableLetter:SelectableLetter = aEvent.currentTarget as SelectableLetter;
-			var character:String = selectableLetter.Character;
+			AddSelectedLetter(selectableLetter.Character);
+			RemoveSelectableLetter(selectableLetter);
 			
-			mCurrentWordField.appendText(character);
-			mCurrentWordField.setTextFormat(mWordFieldFormat);
+			RefreshCurrentWord();
+		}
+		
+		private function OnLetterUnselected(aEvent:SelectableLetterEvent):void
+		{
+			var selectedLetter:SelectableLetter = aEvent.currentTarget as SelectableLetter;
+			AddSelectableLetter(selectedLetter.Character);
+			RemoveSelectedLetter(selectedLetter);
+			
+			RefreshCurrentWord();
 		}
 	}
 }
