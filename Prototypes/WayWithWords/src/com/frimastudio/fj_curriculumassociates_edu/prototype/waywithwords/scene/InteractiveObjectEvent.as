@@ -8,14 +8,16 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 		
 		public var LetterSelection:String;
 		
-		public function InteractiveObjectEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
+		public function InteractiveObjectEvent(type:String, aLetterSelection:String, bubbles:Boolean=false, cancelable:Boolean=false)
 		{
 			super(type, bubbles, cancelable);
+			
+			LetterSelection = aLetterSelection;
 		}
 		
 		public override function clone():Event
 		{
-			return new InteractiveObjectEvent(type, bubbles, cancelable);
+			return new InteractiveObjectEvent(type, LetterSelection, bubbles, cancelable);
 		}
 		
 		public override function toString():String

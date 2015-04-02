@@ -3,6 +3,8 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.Composition;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.HUD;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.interactioninput.InteractionInputEvent;
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.navigation.NavigationEvent;
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.navigation.NavigationWidget;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.Widget;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.interactioninput.InteractionInputWidget;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.InteractiveObjectEvent;
@@ -17,6 +19,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords
 	public class Main extends Sprite
 	{
 		private var mSceneContainer:Sprite;
+		private var mNavigationWidget:NavigationWidget;
 		private var mInputWidget:InteractionInputWidget;
 		private var mSam:SamInteractiveObject;
 		
@@ -34,11 +37,14 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords
 			addChild(mSceneContainer = new Sprite());
 			addChild(HUD.Instance as DisplayObject);
 			
+			mNavigationWidget = new NavigationWidget(new Point(50, -50), new Point(50, 50));
+			mNavigationWidget.addEventListener(NavigationEvent.REWIND, OnRewind);
+			
 			mInputWidget = new InteractionInputWidget(new Point(100, stage.stageHeight + 120), new Point(100, stage.stageHeight - 100));
-			mInputWidget.addEventListener(InteractionInputEvent.REWIND, OnRewindInteractionInput);
 			mInputWidget.addEventListener(InteractionInputEvent.SUBMIT, OnSubmitInteractionInput);
 			
 			var widgetList:Vector.<Widget> = new Vector.<Widget>();
+			widgetList.push(mNavigationWidget);
 			widgetList.push(mInputWidget);
 			
 			var hudComposition:Composition = new Composition(widgetList);
@@ -54,10 +60,11 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords
 		
 		private function Dispose():void
 		{
+			mNavigationWidget.removeEventListener(NavigationEvent.REWIND, OnRewind);
 			mInputWidget.removeEventListener(InteractionInputEvent.SUBMIT, OnSubmitInteractionInput);
 		}
 		
-		private function OnRewindInteractionInput(aEvent:InteractionInputEvent):void
+		private function OnRewind(aEvent:NavigationEvent):void
 		{
 			mSam.RewindDialog();
 		}

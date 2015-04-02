@@ -64,9 +64,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			mPicture = mState.Picture;
 			addChild(mPicture);
 			
-			var event:InteractiveObjectEvent = new InteractiveObjectEvent(InteractiveObjectEvent.STATE_CHANGE);
-			event.LetterSelection = mState.LetterSelection;
-			dispatchEvent(event);
+			dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.STATE_CHANGE, mState.LetterSelection));
 		}
 		
 		public function RewindDialog():void
