@@ -31,7 +31,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 			mCurrentWordField.x = 200;
 			mCurrentWordField.y = -110;
 			mCurrentWordField.width = 200;
-			mCurrentWordField.height = 40;
+			mCurrentWordField.height = 60;
 			mCurrentWordField.selectable = false;
 			mCurrentWordField.text = "";
 			mCurrentWordField.setTextFormat(mWordFieldFormat);

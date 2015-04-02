@@ -17,7 +17,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud
 			graphics.endFill();
 			
 			var format:TextFormat = new TextFormat();
-			format.size = aRect.height;
+			format.size = aRect.height * 0.75;
 			format.bold = true;
 			format.align = "center";
 			

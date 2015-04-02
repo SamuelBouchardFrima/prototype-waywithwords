@@ -9,10 +9,10 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			var stateList:Vector.<InteractiveObjectState> = new Vector.<InteractiveObjectState>();
 			stateList.push(new InteractiveObjectState(0, "Petrified", new Asset.Sam00Bitmap(), "aSmt"));
 			stateList.push(new InteractiveObjectState(1, "Angry", new Asset.Sam02Bitmap(), "dmas"));
-			stateList.push(new InteractiveObjectState(2, "HotTired", new Asset.Sam03Bitmap(), "mtanf"));
-			stateList.push(new InteractiveObjectState(3, "Hot", new Asset.Sam04Bitmap(), "mtanf"));
-			stateList.push(new InteractiveObjectState(4, "Tired", new Asset.Sam05Bitmap(), "mtanf"));
-			stateList.push(new InteractiveObjectState(5, "Happy", new Asset.Sam06Bitmap()));
+			stateList.push(new InteractiveObjectState(3, "HotTired", new Asset.Sam03Bitmap(), "tnamf"));
+			stateList.push(new InteractiveObjectState(4, "Hot", new Asset.Sam04Bitmap(), "tnamf"));
+			stateList.push(new InteractiveObjectState(5, "Tired", new Asset.Sam05Bitmap(), "tnamf"));
+			stateList.push(new InteractiveObjectState(6, "Happy", new Asset.Sam06Bitmap()));
 			
 			super(stateList);
 		}
@@ -24,22 +24,22 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			switch (mState.Name)
 			{
 				case "Petrified":
-					mDialog.text = "That boy is petrified. Can you find his name to awake him?";
+					mDialog.text = "The boy is turned stone.\nWhat is his name?";
 					break;
 				case "Angry":
-					mDialog.text = "Thanks for awaking me! I don't feel well. Can you help me by naming my emotion?";
+					mDialog.text = "I am Sam.\nI am sad or mad?";
 					break;
 				case "HotTired":
-					mDialog.text = "That's it! It's probably because I'm sweaty and tired, though. Do you have anything to help me?";
+					mDialog.text = "I am mad! What do I need?";
 					break;
 				case "Hot":
-					mDialog.text = "Thanks! I'm still sweaty, though. Do you have anything to help me?";
+					mDialog.text = "A mat for me!\nWhat else do I need?";
 					break;
 				case "Tired":
-					mDialog.text = "Thanks! I'm still tired, though. Do you have anything to help me?";
+					mDialog.text = "A fan for me!\nWhat else do I need?";
 					break;
 				case "Happy":
-					mDialog.text = "Thanks! I'm ready to join you in your quest!";
+					mDialog.text = "A mat and a fan for me.\nThank you very much!";
 					break;
 				default:
 					break;
@@ -79,7 +79,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			}
 			else
 			{
-				mDialog.text = "That doesn't seem to be his name. Can you find his name to awake him?";
+				mDialog.text = "It is not his name.\nWhat is his name?";
 			}
 			mDialog.setTextFormat(mDialogFormat);
 		}
@@ -92,11 +92,11 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			}
 			else if (aInput == "sad")
 			{
-				mDialog.text = "I'm not sad! Can you help me by naming my emotion?";
+				mDialog.text = "I am not sad!\nI am mad?";
 			}
 			else
 			{
-				mDialog.text = "I don't understand. I don't feel well. Can you help me by naming my emotion?";
+				mDialog.text = "I am sad or mad?";
 			}
 			mDialog.setTextFormat(mDialogFormat);
 		}
@@ -113,7 +113,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			}
 			else
 			{
-				mDialog.text = "I don't understand. I'm sweaty and tired, though. Do you have anything to help me?";
+				mDialog.text = "I don't need that!\nWhat else do I need?";
 			}
 			mDialog.setTextFormat(mDialogFormat);
 		}
@@ -126,7 +126,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			}
 			else
 			{
-				mDialog.text = "I don't understand. I'm still sweaty, though. Do you have anything to help me?";
+				mDialog.text = "I don't need that!\nWhat else do I need?";
 			}
 			mDialog.setTextFormat(mDialogFormat);
 		}
@@ -139,7 +139,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			}
 			else
 			{
-				mDialog.text = "I don't understand. I'm still tired, though. Do you have anything to help me?";
+				mDialog.text = "I don't need that!\nWhat else do I need?";
 			}
 			mDialog.setTextFormat(mDialogFormat);
 		}
