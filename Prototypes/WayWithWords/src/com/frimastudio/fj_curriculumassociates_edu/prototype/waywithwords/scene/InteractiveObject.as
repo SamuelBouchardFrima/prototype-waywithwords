@@ -34,7 +34,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			mDialog.autoSize = TextFieldAutoSize.LEFT;
 			mDialog.width = 450;
 			mDialog.height = 200;
-			mDialog.x = 180;
+			mDialog.x = 120;
 			mDialog.setTextFormat(mDialogFormat);
 			mDialog.selectable = false;
 			addChild(mDialog);
@@ -64,7 +64,8 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			mPicture = mState.Picture;
 			addChild(mPicture);
 			
-			dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.STATE_CHANGE, mState.LetterSelection));
+			dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.STATE_CHANGE, mState.LetterSelection,
+				mState.ShowInventory));
 		}
 		
 		public function RewindDialog():void

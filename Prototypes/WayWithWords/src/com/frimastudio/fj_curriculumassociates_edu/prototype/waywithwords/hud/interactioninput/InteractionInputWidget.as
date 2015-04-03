@@ -26,6 +26,13 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 		{
 			super(aRetractedAnchor, aDeployedAnchor);
 			
+			graphics.lineStyle(1, 0xCCCCCC);
+			graphics.moveTo(-65, -160);
+			graphics.lineTo(665, -160);
+			graphics.lineTo(665, 80);
+			graphics.lineTo(-65, 80);
+			graphics.lineTo(-65, -160);
+			
 			mSelectedLetterSlots = new Vector.<Point>();
 			mSelectableLetterSlots = new Vector.<Point>();
 			mSelectableLetterSlotTiles = new Vector.<Sprite>();
@@ -33,7 +40,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 			mSelectableLetterList = new Vector.<SelectableLetter>();
 			mCurrentWord = "";
 			
-			var buttonRect:Rectangle = new Rectangle( -20, -20, 40, 40);
+			var buttonRect:Rectangle = new Rectangle(-20, -20, 40, 40);
 			
 			mSubmitButton = new WidgetButton(">", buttonRect, 0x00CC00);
 			mSubmitButton.x = 535;

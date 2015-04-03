@@ -3,6 +3,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.Composition;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.HUD;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.interactioninput.InteractionInputEvent;
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.inventory.InventoryWidget;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.navigation.NavigationEvent;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.navigation.NavigationWidget;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.Widget;
@@ -21,6 +22,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords
 		private var mSceneContainer:Sprite;
 		private var mNavigationWidget:NavigationWidget;
 		private var mInputWidget:InteractionInputWidget;
+		private var mInventoryWidget:InventoryWidget;
 		private var mSam:SamInteractiveObject;
 		
 		public function Main():void
@@ -43,15 +45,18 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords
 			mInputWidget = new InteractionInputWidget(new Point(100, stage.stageHeight + 120), new Point(100, stage.stageHeight - 100));
 			mInputWidget.addEventListener(InteractionInputEvent.SUBMIT, OnSubmitInteractionInput);
 			
+			mInventoryWidget = new InventoryWidget(new Point(stage.stageWidth + 150, 130), new Point(stage.stageWidth - 80, 130));
+			
 			var widgetList:Vector.<Widget> = new Vector.<Widget>();
 			widgetList.push(mNavigationWidget);
 			widgetList.push(mInputWidget);
+			widgetList.push(mInventoryWidget);
 			
 			var hudComposition:Composition = new Composition(widgetList);
 			HUD.Instance.ChangeComposition(hudComposition);
 			
 			mSam = new SamInteractiveObject();
-			mSam.x = 100;
+			mSam.x = 80;
 			mSam.y = 100;
 			mSam.addEventListener(InteractiveObjectEvent.STATE_CHANGE, OnSamStateChange);
 			mSam.SetState(0);
@@ -77,6 +82,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords
 		private function OnSamStateChange(aEvent:InteractiveObjectEvent):void
 		{
 			mInputWidget.SetLetterSelection(aEvent.LetterSelection);
+			mInventoryWidget.Retracted = !aEvent.ShowInventory;
 		}
 	}
 }

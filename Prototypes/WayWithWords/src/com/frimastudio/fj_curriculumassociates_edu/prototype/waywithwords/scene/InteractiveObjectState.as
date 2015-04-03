@@ -8,6 +8,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 		private var mName:String;
 		private var mPicture:Bitmap;
 		private var mLetterSelection:String;
+		private var mShowInventory:Boolean;
 		
 		public function get ID():int
 		{
@@ -29,7 +30,13 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			return mLetterSelection;
 		}
 		
-		public function InteractiveObjectState(aID:int, aName:String, aPicture:Bitmap, aLetterSelection:String = "")
+		public function get ShowInventory():Boolean
+		{
+			return mShowInventory;
+		}
+		
+		public function InteractiveObjectState(aID:int, aName:String, aPicture:Bitmap, aLetterSelection:String = "",
+			aShowInventory:Boolean = false)
 		{
 			if (isNaN(aID) || aName == null || aName == "" || aPicture == null)
 			{
@@ -40,6 +47,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			mName = aName;
 			mPicture = aPicture;
 			mLetterSelection = aLetterSelection;
+			mShowInventory = aShowInventory;
 		}
 	}
 }

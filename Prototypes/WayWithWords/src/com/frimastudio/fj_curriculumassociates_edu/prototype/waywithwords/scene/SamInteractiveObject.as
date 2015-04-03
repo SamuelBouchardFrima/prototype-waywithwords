@@ -9,9 +9,9 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			var stateList:Vector.<InteractiveObjectState> = new Vector.<InteractiveObjectState>();
 			stateList.push(new InteractiveObjectState(0, "Petrified", new Asset.Sam00Bitmap(), "aSmt"));
 			stateList.push(new InteractiveObjectState(1, "Angry", new Asset.Sam02Bitmap(), "dmas"));
-			stateList.push(new InteractiveObjectState(2, "HotTired", new Asset.Sam03Bitmap(), "tnamf"));
-			stateList.push(new InteractiveObjectState(3, "Hot", new Asset.Sam04Bitmap(), "tnamf"));
-			stateList.push(new InteractiveObjectState(4, "Tired", new Asset.Sam05Bitmap(), "tnamf"));
+			stateList.push(new InteractiveObjectState(2, "HotTired", new Asset.Sam03Bitmap(), "tnamf", true));
+			stateList.push(new InteractiveObjectState(3, "Hot", new Asset.Sam04Bitmap(), "tnamf", true));
+			stateList.push(new InteractiveObjectState(4, "Tired", new Asset.Sam05Bitmap(), "tnamf", true));
 			stateList.push(new InteractiveObjectState(5, "Happy", new Asset.Sam06Bitmap()));
 			
 			super(stateList);
@@ -80,7 +80,8 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			else
 			{
 				mDialog.text = "It is not his name.\nWhat is his name?";
-				dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.STATE_CHANGE, mState.LetterSelection));
+				dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.STATE_CHANGE, mState.LetterSelection,
+					mState.ShowInventory));
 			}
 			mDialog.setTextFormat(mDialogFormat);
 		}
@@ -94,12 +95,14 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			else if (aInput == "sad")
 			{
 				mDialog.text = "I am not sad!\nI am mad?";
-				dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.STATE_CHANGE, mState.LetterSelection));
+				dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.STATE_CHANGE, mState.LetterSelection,
+					mState.ShowInventory));
 			}
 			else
 			{
 				mDialog.text = "I am sad or mad?";
-				dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.STATE_CHANGE, mState.LetterSelection));
+				dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.STATE_CHANGE, mState.LetterSelection,
+					mState.ShowInventory));
 			}
 			mDialog.setTextFormat(mDialogFormat);
 		}
@@ -117,7 +120,8 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			else
 			{
 				mDialog.text = "I don't need that!\nWhat else do I need?";
-				dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.STATE_CHANGE, mState.LetterSelection));
+				dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.STATE_CHANGE, mState.LetterSelection,
+					mState.ShowInventory));
 			}
 			mDialog.setTextFormat(mDialogFormat);
 		}
@@ -131,7 +135,8 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			else
 			{
 				mDialog.text = "I don't need that!\nWhat else do I need?";
-				dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.STATE_CHANGE, mState.LetterSelection));
+				dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.STATE_CHANGE, mState.LetterSelection,
+					mState.ShowInventory));
 			}
 			mDialog.setTextFormat(mDialogFormat);
 		}
@@ -145,7 +150,8 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			else
 			{
 				mDialog.text = "I don't need that!\nWhat else do I need?";
-				dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.STATE_CHANGE, mState.LetterSelection));
+				dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.STATE_CHANGE, mState.LetterSelection,
+					mState.ShowInventory));
 			}
 			mDialog.setTextFormat(mDialogFormat);
 		}
