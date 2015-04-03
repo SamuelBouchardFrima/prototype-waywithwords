@@ -124,64 +124,106 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 			mSelectableLetterList.splice(0, mSelectableLetterList.length);
 		}
 		
-		private function AddSelectedLetter(aCharacter:String):void
+		private function AddSelectedLetter(aCharacter:String, aIndex:int = -1):void
 		{
+			var slot:Point;
 			var selectedLetter:SelectableLetter = new SelectableLetter(aCharacter);
-			selectedLetter.x = (selectedLetter.width + 5) * mSelectedLetterList.length + 100;
-			selectedLetter.y = -90;
+			if (aIndex == -1 || aIndex >= mSelectedLetterList.length)
+			{
+				slot = mSelectedLetterSlots[mSelectedLetterList.length];
+				mSelectedLetterList.push(selectedLetter);
+			}
+			else
+			{
+				slot = mSelectedLetterSlots[aIndex];
+				mSelectedLetterList.splice(aIndex, 0, selectedLetter);
+			}
+			selectedLetter.x = slot.x;
+			selectedLetter.y = slot.y;
+			selectedLetter.addEventListener(SelectableLetterEvent.DRAGGED, OnLetterDragged);
+			selectedLetter.addEventListener(SelectableLetterEvent.DROPPED, OnLetterDropped);
 			selectedLetter.addEventListener(SelectableLetterEvent.SELECTED, OnLetterUnselected);
-			mSelectedLetterList.push(selectedLetter);
 			addChild(selectedLetter);
 		}
 		
-		private function AddSelectableLetter(aCharacter:String):void
+		private function AddSelectableLetter(aCharacter:String, aIndex:int = -1):void
 		{
 			var selectableLetter:SelectableLetter = new SelectableLetter(aCharacter);
 			
-			var emptySlot:Boolean;
-			for (var i:int = 0, end:int = mSelectableLetterList.length; i < end && !emptySlot; ++i)
+			if (aIndex != -1 && mSelectableLetterList[aIndex] == null)
 			{
-				if (mSelectableLetterList[i] == null)
+				mSelectableLetterList[aIndex] = selectableLetter;
+			}
+			else
+			{
+				var emptySlot:Boolean;
+				for (var i:int = 0, end:int = mSelectableLetterList.length; i < end && !emptySlot; ++i)
 				{
-					mSelectableLetterList[i] = selectableLetter;
-					emptySlot = true;
+					if (mSelectableLetterList[i] == null)
+					{
+						mSelectableLetterList[i] = selectableLetter;
+						emptySlot = true;
+					}
+				}
+				if (!emptySlot)
+				{
+					mSelectableLetterList.push(selectableLetter);
 				}
 			}
-			if (!emptySlot)
-			{
-				mSelectableLetterList.push(selectableLetter);
-			}
 			
-			var slot:int = mSelectableLetterList.indexOf(selectableLetter);
-			selectableLetter.x = ((selectableLetter.width + 5) * slot) + 100;
-			selectableLetter.y = 10;
+			var slot:Point = mSelectableLetterSlots[mSelectableLetterList.indexOf(selectableLetter)];
+			selectableLetter.x = slot.x;
+			selectableLetter.y = slot.y;
+			selectableLetter.addEventListener(SelectableLetterEvent.DRAGGED, OnLetterDragged);
+			selectableLetter.addEventListener(SelectableLetterEvent.DROPPED, OnLetterDropped);
 			selectableLetter.addEventListener(SelectableLetterEvent.SELECTED, OnLetterSelected);
 			addChild(selectableLetter);
 		}
 		
 		private function RemoveSelectedLetter(aLetter:SelectableLetter, aAdjustList:Boolean = true):void
 		{
+			aLetter.removeEventListener(SelectableLetterEvent.DRAGGED, OnLetterDragged);
+			aLetter.removeEventListener(SelectableLetterEvent.DROPPED, OnLetterDropped);
 			aLetter.removeEventListener(SelectableLetterEvent.SELECTED, OnLetterUnselected);
+			aLetter.Dispose();
 			removeChild(aLetter);
 			
-			if (!aAdjustList)
+			if (aAdjustList)
 			{
-				return;
-			}
-			
-			var i:int = mSelectedLetterList.indexOf(aLetter);
-			mSelectedLetterList.splice(i, 1);
-			for (var end:int = mSelectedLetterList.length; i < end; ++i)
-			{
-				mSelectedLetterList[i].x -= mSelectedLetterList[i].width + 5;
+				var i:int = mSelectedLetterList.indexOf(aLetter);
+				mSelectedLetterList.splice(i, 1);
+				for (var end:int = mSelectedLetterList.length; i < end; ++i)
+				{
+					mSelectedLetterList[i].x = mSelectedLetterSlots[i].x;
+					mSelectedLetterList[i].y = mSelectedLetterSlots[i].y;
+				}
 			}
 		}
 		
 		private function RemoveSelectableLetter(aLetter:SelectableLetter):void
 		{
+			aLetter.removeEventListener(SelectableLetterEvent.DRAGGED, OnLetterDragged);
+			aLetter.removeEventListener(SelectableLetterEvent.DROPPED, OnLetterDropped);
 			aLetter.removeEventListener(SelectableLetterEvent.SELECTED, OnLetterSelected);
+			aLetter.Dispose();
 			removeChild(aLetter);
 			mSelectableLetterList[mSelectableLetterList.indexOf(aLetter)] = null;
+		}
+		
+		private function SelectLetter(aLetter:SelectableLetter, aIndex:int = -1):void
+		{
+			var character:String = aLetter.Character;
+			RemoveSelectableLetter(aLetter);
+			AddSelectedLetter(character, aIndex);
+			RefreshCurrentWord();
+		}
+		
+		private function UnselectLetter(aLetter:SelectableLetter, aIndex:int = -1):void
+		{
+			var character:String = aLetter.Character;
+			RemoveSelectedLetter(aLetter);
+			AddSelectableLetter(character, aIndex);
+			RefreshCurrentWord();
 		}
 		
 		private function RefreshCurrentWord():void
@@ -209,22 +251,164 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 			RefreshCurrentWord();
 		}
 		
+		private function OnLetterDragged(aEvent:SelectableLetterEvent):void
+		{
+			var letter:SelectableLetter = aEvent.currentTarget as SelectableLetter;
+			
+			var i:int, end:int;
+			if (letter.x >= mSelectedLetterSlots[0].x - 40 &&
+				letter.x <= mSelectedLetterSlots[mSelectedLetterSlots.length - 1].x + 40 &&
+				letter.y >= mSelectedLetterSlots[0].y - 40 &&
+				letter.y <= mSelectedLetterSlots[0].y + 40)
+			{
+				// Finding the slot over which the letter is being dragged
+				var slotIndex:int = -1;
+				for (i = 0, end = mSelectedLetterSlots.length; i < end; ++i)
+				{
+					if (Math.abs(mSelectedLetterSlots[i].x - letter.x) <= 40)
+					{
+						slotIndex = i;
+					}
+				}
+				
+				// Finding the current index of the letter, if is is already part of the selected list
+				var currentIndex:int = mSelectedLetterList.indexOf(letter);
+				for (i = 0, end = mSelectedLetterList.length; i < end; ++i)
+				{
+					if (i == currentIndex)
+					{
+						continue;
+					}
+					
+					if (currentIndex == -1 || i < currentIndex)
+					{
+						mSelectedLetterList[i].x = mSelectedLetterSlots[(i < slotIndex ? i : i + 1)].x;
+					}
+					else
+					{
+						mSelectedLetterList[i].x = mSelectedLetterSlots[(i > slotIndex ? i : i - 1)].x;
+					}
+					mSelectedLetterList[i].y = mSelectedLetterSlots[i].y;
+				}
+			}
+			else
+			{
+				for (i = 0, end = mSelectedLetterList.length; i < end; ++i)
+				{
+					if (mSelectedLetterList[i] != letter)
+					{
+						mSelectedLetterList[i].x = mSelectedLetterSlots[i].x;
+						mSelectedLetterList[i].y = mSelectedLetterSlots[i].y;
+					}
+				}
+			}
+		}
+		
+		private function OnLetterDropped(aEvent:SelectableLetterEvent):void
+		{
+			var letter:SelectableLetter = aEvent.currentTarget as SelectableLetter;
+			var selected:Boolean = mSelectedLetterList.indexOf(letter) > -1;
+			var slotIndex:int = -1, letterIndex:int = -1;
+			var slot:Point;
+			var i:int, end:int;
+			
+			if (letter.x >= mSelectedLetterSlots[0].x - 40 &&
+				letter.x <= mSelectedLetterSlots[mSelectedLetterSlots.length - 1].x + 40 &&
+				letter.y >= mSelectedLetterSlots[0].y - 40 &&
+				letter.y <= mSelectedLetterSlots[0].y + 40)
+			{
+				// Finding the slot over which the letter is being dragged
+				for (i = 0, end = mSelectedLetterSlots.length; i < end; ++i)
+				{
+					if (Math.abs(mSelectedLetterSlots[i].x - letter.x) <= 40)
+					{
+						slotIndex = i;
+					}
+				}
+				
+				if (!selected)
+				{
+					SelectLetter(letter, Math.min(slotIndex, mSelectedLetterList.length));
+					return;
+				}
+				
+				slotIndex = Math.min(slotIndex, mSelectedLetterList.length - 1);
+				letterIndex = mSelectedLetterList.indexOf(letter);
+				if (slotIndex == -1 || letterIndex == slotIndex)
+				{
+					slot = mSelectedLetterSlots[letterIndex];
+				}
+				else
+				{
+					mSelectedLetterList.splice(letterIndex, 1);
+					mSelectedLetterList.splice(slotIndex, 0, letter);
+					slot = mSelectedLetterSlots[slotIndex];
+				}
+			}
+			else
+			{
+				if (selected)
+				{
+					if (letter.x >= mSelectableLetterSlots[0].x - 40 &&
+						letter.x <= mSelectableLetterSlots[mSelectableLetterSlots.length - 1].x + 40 &&
+						letter.y >= mSelectableLetterSlots[0].y - 40 &&
+						letter.y <= mSelectableLetterSlots[0].y + 40)
+					{
+						// Finding the slot over which the letter is being dragged
+						for (i = 0, end = mSelectableLetterSlots.length; i < end; ++i)
+						{
+							if (Math.abs(mSelectableLetterSlots[i].x - letter.x) <= 40)
+							{
+								slotIndex = i;
+							}
+						}
+					}
+					
+					UnselectLetter(letter, slotIndex);
+					return;
+				}
+				
+				if (letter.x >= mSelectableLetterSlots[0].x - 40 &&
+					letter.x <= mSelectableLetterSlots[mSelectableLetterSlots.length - 1].x + 40 &&
+					letter.y >= mSelectableLetterSlots[0].y - 40 &&
+					letter.y <= mSelectableLetterSlots[0].y + 40)
+				{
+					// Finding the slot over which the letter is being dragged
+					for (i = 0, end = mSelectableLetterSlots.length; i < end; ++i)
+					{
+						if (Math.abs(mSelectableLetterSlots[i].x - letter.x) <= 40)
+						{
+							slotIndex = i;
+						}
+					}
+					
+					if (letterIndex != slotIndex)
+					{
+						mSelectableLetterList.splice(mSelectableLetterList.indexOf(letter), 1);
+						mSelectableLetterList.splice(slotIndex, 0, letter);
+					}
+					
+					slot = mSelectableLetterSlots[slotIndex];
+				}
+				else
+				{
+					slot = mSelectableLetterSlots[mSelectableLetterList.indexOf(letter)];
+				}
+			}
+			
+			letter.x = slot.x;
+			letter.y = slot.y;
+			RefreshCurrentWord();
+		}
+		
 		private function OnLetterSelected(aEvent:SelectableLetterEvent):void
 		{
-			var selectableLetter:SelectableLetter = aEvent.currentTarget as SelectableLetter;
-			var character:String = selectableLetter.Character;
-			RemoveSelectableLetter(selectableLetter);
-			AddSelectedLetter(character);
-			RefreshCurrentWord();
+			SelectLetter(aEvent.currentTarget as SelectableLetter);
 		}
 		
 		private function OnLetterUnselected(aEvent:SelectableLetterEvent):void
 		{
-			var selectedLetter:SelectableLetter = aEvent.currentTarget as SelectableLetter;
-			var character:String = selectedLetter.Character;
-			RemoveSelectedLetter(selectedLetter);
-			AddSelectableLetter(character);
-			RefreshCurrentWord();
+			UnselectLetter(aEvent.currentTarget as SelectableLetter);
 		}
 	}
 }

@@ -32,9 +32,9 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			mDialog.multiline = true;
 			mDialog.wordWrap = true;
 			mDialog.autoSize = TextFieldAutoSize.LEFT;
-			mDialog.width = 400;
-			mDialog.height = 160;
-			mDialog.x = 200;
+			mDialog.width = 450;
+			mDialog.height = 200;
+			mDialog.x = 180;
 			mDialog.setTextFormat(mDialogFormat);
 			mDialog.selectable = false;
 			addChild(mDialog);

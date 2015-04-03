@@ -4,6 +4,8 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 	
 	public class SelectableLetterEvent extends Event
 	{
+		public static const DRAGGED:String = "SelectableLetterEvent::DRAGGED";
+		public static const DROPPED:String = "SelectableLetterEvent::DROPPED";
 		public static const SELECTED:String = "SelectableLetterEvent::SELECTED";
 		public static const UNSELECTED:String = "SelectableLetterEvent::UNSELECTED";
 		
