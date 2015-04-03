@@ -80,6 +80,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			else
 			{
 				mDialog.text = "It is not his name.\nWhat is his name?";
+				dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.STATE_CHANGE, mState.LetterSelection));
 			}
 			mDialog.setTextFormat(mDialogFormat);
 		}
@@ -93,10 +94,12 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			else if (aInput == "sad")
 			{
 				mDialog.text = "I am not sad!\nI am mad?";
+				dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.STATE_CHANGE, mState.LetterSelection));
 			}
 			else
 			{
 				mDialog.text = "I am sad or mad?";
+				dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.STATE_CHANGE, mState.LetterSelection));
 			}
 			mDialog.setTextFormat(mDialogFormat);
 		}
@@ -114,6 +117,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			else
 			{
 				mDialog.text = "I don't need that!\nWhat else do I need?";
+				dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.STATE_CHANGE, mState.LetterSelection));
 			}
 			mDialog.setTextFormat(mDialogFormat);
 		}
@@ -127,6 +131,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			else
 			{
 				mDialog.text = "I don't need that!\nWhat else do I need?";
+				dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.STATE_CHANGE, mState.LetterSelection));
 			}
 			mDialog.setTextFormat(mDialogFormat);
 		}
@@ -140,6 +145,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			else
 			{
 				mDialog.text = "I don't need that!\nWhat else do I need?";
+				dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.STATE_CHANGE, mState.LetterSelection));
 			}
 			mDialog.setTextFormat(mDialogFormat);
 		}

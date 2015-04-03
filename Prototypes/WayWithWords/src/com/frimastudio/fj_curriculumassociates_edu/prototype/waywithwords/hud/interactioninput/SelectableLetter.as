@@ -71,7 +71,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 			field.selectable = false;
 			addChild(field);
 			
-			mEnableClickTimer = new Timer(16, 1);
+			mEnableClickTimer = new Timer(33, 1);
 			mEnableClickTimer.addEventListener(TimerEvent.TIMER_COMPLETE, OnTimerComplete);
 			
 			addEventListener(MouseEvent.MOUSE_DOWN, OnMouseDown);
