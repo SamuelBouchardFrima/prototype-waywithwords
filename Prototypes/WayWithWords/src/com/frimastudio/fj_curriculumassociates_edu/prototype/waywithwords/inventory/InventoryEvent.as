@@ -5,6 +5,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.inven
 	public class InventoryEvent extends Event
 	{
 		public static const ITEM_ADDED:String = "InventoryEvent::ITEM_ADDED";
+		public static const ITEM_USED:String = "InventoryEvent::ITEM_USED";
 		
 		public var EventItem:Item;
 		

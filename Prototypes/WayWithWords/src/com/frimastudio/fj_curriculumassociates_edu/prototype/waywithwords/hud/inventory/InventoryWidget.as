@@ -29,11 +29,13 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 			AddIcon(Asset.FanIconBitmap, Inventory.Instance.HasItem(Item.FAN));
 			
 			Inventory.Instance.addEventListener(InventoryEvent.ITEM_ADDED, OnItemAdded);
+			Inventory.Instance.addEventListener(InventoryEvent.ITEM_USED, OnItemUsed);
 		}
 		
 		public function Dispose():void
 		{
 			Inventory.Instance.removeEventListener(InventoryEvent.ITEM_ADDED, OnItemAdded);
+			Inventory.Instance.removeEventListener(InventoryEvent.ITEM_USED, OnItemUsed);
 		}
 		
 		private function AddIcon(aAsset:Class, aCollected:Boolean):void
@@ -51,6 +53,11 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 		private function OnItemAdded(aEvent:InventoryEvent):void
 		{
 			addChild(mIconList[aEvent.EventItem.ID]);
+		}
+		
+		private function OnItemUsed(aEvent:InventoryEvent):void
+		{
+			mIconList[aEvent.EventItem.ID].alpha = 0.5;
 		}
 	}
 }

@@ -1,5 +1,8 @@
 package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 {
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.Asset;
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.inventory.Inventory;
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.inventory.Item;
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -15,6 +18,12 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 		protected var mDialogFormat:TextFormat;
 		protected var mDialog:TextField;
 		protected var mPicture:Bitmap;
+		protected var mOwnedItemList:Vector.<Bitmap>;
+		
+		public function get State():InteractiveObjectState
+		{
+			return mState;
+		}
 		
 		public function InteractiveObject(aStateList:Vector.<InteractiveObjectState>)
 		{
@@ -41,6 +50,8 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			
 			mStateBreadcrumb = new Vector.<InteractiveObjectState>();
 			mStateList = aStateList;
+			
+			mOwnedItemList = new Vector.<Bitmap>();
 		}
 		
 		public function SetState(aID:int, aProgressBreadcrumb:Boolean = true):void
@@ -68,8 +79,18 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 				addChild(mDialog);
 			}
 			
-			dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.STATE_CHANGE, mState.LetterSelection,
-				mState.ShowInventory));
+			dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.STATE_CHANGE, mState));
+		}
+		
+		protected function DispatchTrivialStateChange():void 
+		{
+			dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.STATE_CHANGE, mState));
+			dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.ENABLE_REWIND, mState));
+		}
+		
+		public function ResetToCurrentState():void
+		{
+			SetState(mState.ID);
 		}
 		
 		public function RewindDialog():void
@@ -86,6 +107,29 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 		public function HandleInput(aInput:String):void
 		{
 			throw new Error("InteractiveObject::HandleInput is an abstract method which requires overriding.");
+		}
+		
+		protected function UseItem(aItem:Item):void
+		{
+			Inventory.Instance.UseItem(aItem);
+			
+			var item:Bitmap;
+			switch (aItem)
+			{
+				case Item.MAT:
+					item = new Asset.MatIconBitmap();
+					break;
+				case Item.FAN:
+					item = new Asset.FanIconBitmap();
+					break;
+				default:
+					break;
+			}
+			
+			item.x = 120 + (mOwnedItemList.length * 85);
+			item.y = 130;
+			addChild(item);
+			mOwnedItemList.push(item);
 		}
 	}
 }

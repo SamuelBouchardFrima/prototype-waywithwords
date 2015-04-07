@@ -7,5 +7,6 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.inven
 	{
 		function AddItem(aItem:Item):void;
 		function HasItem(aItem:Item):Boolean;
+		function UseItem(aItem:Item):void;
 	}
 }

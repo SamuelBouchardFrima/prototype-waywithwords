@@ -11,10 +11,15 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 	
 	public class InteractiveObjectScene extends Scene
 	{
-		private var mNavigationWidget:NavigationWidget;
-		private var mInputWidget:InteractionInputWidget;
-		private var mInventoryWidget:InventoryWidget;
+		protected var mNavigationWidget:NavigationWidget;
+		protected var mInputWidget:InteractionInputWidget;
+		protected var mInventoryWidget:InventoryWidget;
 		protected var mInteractiveObject:InteractiveObject;
+		
+		public function get MainObject():InteractiveObject
+		{
+			return mInteractiveObject;
+		}
 		
 		public function InteractiveObjectScene()
 		{
@@ -39,8 +44,11 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			mInteractiveObject.x = 60;
 			mInteractiveObject.y = 100;
 			mInteractiveObject.addEventListener(InteractiveObjectEvent.STATE_CHANGE, OnStateChange);
+			mInteractiveObject.addEventListener(InteractiveObjectEvent.ENABLE_REWIND, OnEnableRewind);
 			mInteractiveObject.SetState(0);
 			addChild(mInteractiveObject);
+			
+			mNavigationWidget.RewindDisabled = true;
 		}
 		
 		override public function Dispose():void
@@ -48,28 +56,37 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			mNavigationWidget.removeEventListener(NavigationEvent.REWIND, OnRewind);
 			mNavigationWidget.removeEventListener(NavigationEvent.LEAVE, OnLeave);
 			mInputWidget.removeEventListener(InteractionInputEvent.SUBMIT, OnSubmitInteractionInput);
+			mInteractiveObject.removeEventListener(InteractiveObjectEvent.STATE_CHANGE, OnStateChange);
+			mInteractiveObject.removeEventListener(InteractiveObjectEvent.ENABLE_REWIND, OnEnableRewind);
 			
 			super.Dispose();
 		}
 		
-		private function OnRewind(aEvent:NavigationEvent):void
+		protected function OnRewind(aEvent:NavigationEvent):void
 		{
-			mInteractiveObject.RewindDialog();
+			mInteractiveObject.ResetToCurrentState();
+			mNavigationWidget.RewindDisabled = true;
 		}
 		
-		private function OnLeave(aEvent:NavigationEvent):void
+		protected function OnLeave(aEvent:NavigationEvent):void
 		{
 			SceneManager.Instance.LeaveScene(this);
 		}
 		
-		private function OnSubmitInteractionInput(aEvent:InteractionInputEvent):void
+		protected function OnSubmitInteractionInput(aEvent:InteractionInputEvent):void
 		{
 			mInteractiveObject.HandleInput(aEvent.Input);
 		}
 		
-		private function OnStateChange(aEvent:InteractiveObjectEvent):void
+		protected function OnStateChange(aEvent:InteractiveObjectEvent):void
 		{
-			mInputWidget.SetLetterSelection(aEvent.LetterSelection);
+			mInputWidget.SetLetterSelection(aEvent.State.LetterSelection);
+			mNavigationWidget.RewindDisabled = true;
+		}
+		
+		protected function OnEnableRewind(aEvent:InteractiveObjectEvent):void
+		{
+			mNavigationWidget.RewindDisabled = false;
 		}
 	}
 }

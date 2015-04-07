@@ -1,8 +1,13 @@
 package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.level1
 {
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.Asset;
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.inventory.Inventory;
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.inventory.InventoryEvent;
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.inventory.Item;
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.InteractiveObjectEvent;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.LevelScene;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.SceneManager;
+	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	
@@ -19,6 +24,8 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			AddSam();
 			AddMat();
 			AddFan();
+			
+			Inventory.Instance.addEventListener(InventoryEvent.ITEM_ADDED, OnItemAdded);
 		}
 		
 		override public function Dispose():void
@@ -30,11 +37,28 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			super.Dispose();
 		}
 		
+		override public function ShowScene():void
+		{
+			if (!Level1.SamScene)
+			{
+				return;
+			}
+			
+			while (mSam.numChildren > 0)
+			{
+				mSam.removeChildAt(0);
+			}
+			
+			mSam.addChild(new Bitmap(Level1.SamScene.MainObject.State.Picture.bitmapData));
+			
+			super.ShowScene();
+		}
+		
 		private function AddSam():void
 		{
 			mSam = new Sprite();
 			mSam.addChild(new Asset.Sam00Bitmap());
-			mSam.x = 100;
+			mSam.x = 150;
 			mSam.y = 200;
 			mSam.addEventListener(MouseEvent.CLICK, OnClickSam);
 			addChild(mSam);
@@ -73,6 +97,23 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 		private function OnClickFan(aEvent:MouseEvent):void
 		{
 			SceneManager.Instance.ShowScene(Level1.FanScene);
+		}
+		
+		private function OnItemAdded(aEvent:InventoryEvent):void
+		{
+			switch (aEvent.EventItem)
+			{
+				case Item.MAT:
+					mMat.removeEventListener(MouseEvent.CLICK, OnClickMat);
+					removeChild(mMat);
+					break;
+				case Item.FAN:
+					mFan.removeEventListener(MouseEvent.CLICK, OnClickFan);
+					removeChild(mFan);
+					break;
+				default:
+					break;
+			}
 		}
 	}
 }

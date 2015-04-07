@@ -1,5 +1,6 @@
 package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.navigation
 {
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.DisablableWidgetButton;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.RetractableWidget;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.WidgetButton;
 	import flash.events.MouseEvent;
@@ -8,8 +9,17 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.n
 	
 	public class NavigationWidget extends RetractableWidget
 	{
-		private var mRewindButton:WidgetButton;
+		private var mRewindButton:DisablableWidgetButton;
 		private var mLeaveButton:WidgetButton;
+		
+		public function get RewindDisabled():Boolean
+		{
+			return mRewindButton.Disabled;
+		}
+		public function set RewindDisabled(aValue:Boolean):void
+		{
+			mRewindButton.Disabled = aValue;
+		}
 		
 		public function NavigationWidget(aRetractedAnchor:Point, aDeployedAnchor:Point)
 		{
@@ -17,7 +27,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.n
 			
 			var buttonRect:Rectangle = new Rectangle( -20, -20, 40, 40);
 			
-			mRewindButton = new WidgetButton("<", buttonRect, 0xCCCC00);
+			mRewindButton = new DisablableWidgetButton("<", buttonRect, 0xCCCC00);
 			mRewindButton.x = 0;
 			mRewindButton.y = 0;
 			mRewindButton.addEventListener(MouseEvent.CLICK, OnRewind);

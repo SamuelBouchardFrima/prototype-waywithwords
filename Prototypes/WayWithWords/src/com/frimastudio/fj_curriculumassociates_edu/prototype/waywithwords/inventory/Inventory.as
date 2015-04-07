@@ -31,6 +31,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.inven
 			if (!HasItem(aItem))
 			{
 				mItemList.push(aItem);
+				aItem.State = ItemState.COLLECTED;
 				dispatchEvent(new InventoryEvent(InventoryEvent.ITEM_ADDED, aItem));
 			}
 		}
@@ -38,6 +39,18 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.inven
 		public function HasItem(aItem:Item):Boolean
 		{
 			return mItemList.indexOf(aItem) > -1;
+		}
+		
+		public function UseItem(aItem:Item):void
+		{
+			if (HasItem(aItem))
+			{
+				if (aItem.State != ItemState.USED)
+				{
+					aItem.State = ItemState.USED;
+					dispatchEvent(new InventoryEvent(InventoryEvent.ITEM_USED, aItem));
+				}
+			}
 		}
 	}
 }

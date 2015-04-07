@@ -58,8 +58,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			else
 			{
 				mDialog.text = "It is not its name.\nWhat is its name?";
-				dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.STATE_CHANGE, mState.LetterSelection,
-					mState.ShowInventory));
+				DispatchTrivialStateChange();
 			}
 			mDialog.setTextFormat(mDialogFormat);
 		}

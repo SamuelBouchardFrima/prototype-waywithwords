@@ -10,5 +10,12 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			
 			super();
 		}
+		
+		override public function ShowScene():void
+		{
+			mInteractiveObject.ResetToCurrentState();
+			
+			super.ShowScene();
+		}
 	}
 }
