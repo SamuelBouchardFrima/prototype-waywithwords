@@ -5,6 +5,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.n
 	public class NavigationEvent extends Event
 	{
 		public static const REWIND:String = "NavigationEvent::REWIND";
+		public static const LEAVE:String = "NavigationEvent::LEAVE";
 		
 		public function NavigationEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
 		{

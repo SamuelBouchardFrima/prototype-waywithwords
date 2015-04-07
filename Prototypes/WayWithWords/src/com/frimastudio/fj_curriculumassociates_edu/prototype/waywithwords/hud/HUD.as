@@ -21,7 +21,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud
 			}
 		}
 		
-		public function ChangeComposition(aComposition:Composition):void
+		public function ChangeComposition(aComposition:Composition = null):void
 		{
 			var i:int, end:int;
 			
@@ -32,7 +32,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud
 			}
 			
 			// handle application of new composition
-			mCurrentComposition = aComposition;
+			mCurrentComposition = (aComposition ? aComposition : new Composition());
 			for (i = 0, end = mCurrentComposition.WidgetList.length; i < end; ++i)
 			{
 				addChild(mCurrentComposition.WidgetList[i]);

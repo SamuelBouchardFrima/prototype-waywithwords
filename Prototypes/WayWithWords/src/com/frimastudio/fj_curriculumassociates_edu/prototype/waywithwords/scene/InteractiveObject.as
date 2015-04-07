@@ -62,7 +62,11 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			
 			mState = mStateList[aID];
 			mPicture = mState.Picture;
-			addChild(mPicture);
+			if (mPicture)
+			{
+				addChild(mPicture);
+				addChild(mDialog);
+			}
 			
 			dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.STATE_CHANGE, mState.LetterSelection,
 				mState.ShowInventory));

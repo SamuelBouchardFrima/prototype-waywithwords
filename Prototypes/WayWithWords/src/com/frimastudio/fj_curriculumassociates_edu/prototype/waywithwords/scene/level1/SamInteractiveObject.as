@@ -1,6 +1,11 @@
-package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
+package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.level1
 {
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.Asset;
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.inventory.Inventory;
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.inventory.Item;
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.InteractiveObject;
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.InteractiveObjectEvent;
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.InteractiveObjectState;
 	
 	public class SamInteractiveObject extends InteractiveObject
 	{
@@ -13,6 +18,10 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			stateList.push(new InteractiveObjectState(3, "Hot", new Asset.Sam04Bitmap(), "tnamf", true));
 			stateList.push(new InteractiveObjectState(4, "Tired", new Asset.Sam05Bitmap(), "tnamf", true));
 			stateList.push(new InteractiveObjectState(5, "Happy", new Asset.Sam06Bitmap()));
+			stateList.push(new InteractiveObjectState(6, "RequireMatFan", new Asset.Sam03Bitmap()));
+			stateList.push(new InteractiveObjectState(7, "RequireFanMat", new Asset.Sam03Bitmap()));
+			stateList.push(new InteractiveObjectState(8, "RequireMat", new Asset.Sam05Bitmap()));
+			stateList.push(new InteractiveObjectState(9, "RequireFan", new Asset.Sam04Bitmap()));
 			
 			super(stateList);
 		}
@@ -40,6 +49,18 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 					break;
 				case "Happy":
 					mDialog.text = "A mat and a fan for me.\nThank you very much!";
+					break;
+				case "RequireMatFan":
+					mDialog.text = "Yes, I need a mat! Do you have one?";
+					break;
+				case "RequireFanMat":
+					mDialog.text = "Yes, I need a fan! Do you have one?";
+					break;
+				case "RequireMat":
+					mDialog.text = "Yes, I need a mat! Do you have one?";
+					break;
+				case "RequireFan":
+					mDialog.text = "Yes, I need a fan! Do you have one?";
 					break;
 				default:
 					break;
@@ -111,11 +132,25 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 		{
 			if (aInput == "mat")
 			{
-				SetState(3);
+				if (Inventory.Instance.HasItem(Item.MAT))
+				{
+					SetState(3);
+				}
+				else
+				{
+					SetState(6);
+				}
 			}
 			else if (aInput == "fan")
 			{
-				SetState(4);
+				if (Inventory.Instance.HasItem(Item.FAN))
+				{
+					SetState(4);
+				}
+				else
+				{
+					SetState(7);
+				}
 			}
 			else
 			{
@@ -130,7 +165,14 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 		{
 			if (aInput == "fan")
 			{
-				SetState(5);
+				if (Inventory.Instance.HasItem(Item.FAN))
+				{
+					SetState(5);
+				}
+				else
+				{
+					SetState(9);
+				}
 			}
 			else
 			{
@@ -145,7 +187,14 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 		{
 			if (aInput == "mat")
 			{
-				SetState(5);
+				if (Inventory.Instance.HasItem(Item.MAT))
+				{
+					SetState(5);
+				}
+				else
+				{
+					SetState(8);
+				}
 			}
 			else
 			{

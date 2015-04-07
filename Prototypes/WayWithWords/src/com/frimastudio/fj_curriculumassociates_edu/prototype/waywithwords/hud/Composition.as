@@ -9,9 +9,9 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud
 			return mWidgetList;
 		}
 		
-		public function Composition(aWidgetList:Vector.<Widget>)
+		public function Composition(aWidgetList:Vector.<Widget> = null)
 		{
-			mWidgetList = aWidgetList;
+			mWidgetList = (aWidgetList ? aWidgetList : new Vector.<Widget>);
 		}
 	}
 }

@@ -2,6 +2,9 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 {
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.Asset;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.RetractableWidget;
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.inventory.Inventory;
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.inventory.InventoryEvent;
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.inventory.Item;
 	import flash.display.Bitmap;
 	import flash.geom.Point;
 	
@@ -22,17 +25,32 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 			
 			mIconList = new Vector.<Bitmap>();
 			
-			AddIcon(Asset.MatBitmap);
-			AddIcon(Asset.FanBitmap);
+			AddIcon(Asset.MatIconBitmap, Inventory.Instance.HasItem(Item.MAT));
+			AddIcon(Asset.FanIconBitmap, Inventory.Instance.HasItem(Item.FAN));
+			
+			Inventory.Instance.addEventListener(InventoryEvent.ITEM_ADDED, OnItemAdded);
 		}
 		
-		private function AddIcon(aAsset:Class):void
+		public function Dispose():void
+		{
+			Inventory.Instance.removeEventListener(InventoryEvent.ITEM_ADDED, OnItemAdded);
+		}
+		
+		private function AddIcon(aAsset:Class, aCollected:Boolean):void
 		{
 			var icon:Bitmap = new aAsset();
 			icon.x = 0 - (icon.width / 2);
 			icon.y = mIconList.length * 85 - (icon.height / 2);
 			mIconList.push(icon);
-			addChild(icon);
+			if (aCollected)
+			{
+				addChild(icon);
+			}
+		}
+		
+		private function OnItemAdded(aEvent:InventoryEvent):void
+		{
+			addChild(mIconList[aEvent.EventItem.ID]);
 		}
 	}
 }

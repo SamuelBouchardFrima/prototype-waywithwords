@@ -35,12 +35,12 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			return mShowInventory;
 		}
 		
-		public function InteractiveObjectState(aID:int, aName:String, aPicture:Bitmap, aLetterSelection:String = "",
+		public function InteractiveObjectState(aID:int, aName:String, aPicture:Bitmap = null, aLetterSelection:String = "",
 			aShowInventory:Boolean = false)
 		{
-			if (isNaN(aID) || aName == null || aName == "" || aPicture == null)
+			if (isNaN(aID) || aName == null || aName == "")
 			{
-				throw new Error("An InteractiveObjectState requires proper ID, name and picture reference.");
+				throw new Error("An InteractiveObjectState requires proper ID and name.");
 			}
 			
 			mID = aID;

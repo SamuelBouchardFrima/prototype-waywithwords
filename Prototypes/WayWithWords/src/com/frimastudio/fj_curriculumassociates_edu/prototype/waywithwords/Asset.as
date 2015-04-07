@@ -17,10 +17,15 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords
 		[Embed(source = "../../../../../../art/Sam06.png")]
 		public static var Sam06Bitmap:Class;
 		
-		[Embed(source = "../../../../../../art/Mat.png")]
-		public static var MatBitmap:Class;
-		[Embed(source = "../../../../../../art/Fan.png")]
-		public static var FanBitmap:Class;
+		[Embed(source = "../../../../../../art/MatObject.png")]
+		public static var MatObjectBitmap:Class;
+		[Embed(source = "../../../../../../art/MatIcon.png")]
+		public static var MatIconBitmap:Class;
+		
+		[Embed(source = "../../../../../../art/FanObject.png")]
+		public static var FanObjectBitmap:Class;
+		[Embed(source = "../../../../../../art/FanIcon.png")]
+		public static var FanIconBitmap:Class;
 		
 		public function Asset()
 		{

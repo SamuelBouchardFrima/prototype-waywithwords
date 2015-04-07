@@ -9,6 +9,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.n
 	public class NavigationWidget extends RetractableWidget
 	{
 		private var mRewindButton:WidgetButton;
+		private var mLeaveButton:WidgetButton;
 		
 		public function NavigationWidget(aRetractedAnchor:Point, aDeployedAnchor:Point)
 		{
@@ -21,11 +22,22 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.n
 			mRewindButton.y = 0;
 			mRewindButton.addEventListener(MouseEvent.CLICK, OnRewind);
 			addChild(mRewindButton);
+			
+			mLeaveButton = new WidgetButton("X", buttonRect, 0xCC0000);
+			mLeaveButton.x = 700;
+			mLeaveButton.y = 0;
+			mLeaveButton.addEventListener(MouseEvent.CLICK, OnLeave);
+			addChild(mLeaveButton);
 		}
 		
 		private function OnRewind(aEvent:MouseEvent):void
 		{
 			dispatchEvent(new NavigationEvent(NavigationEvent.REWIND));
+		}
+		
+		private function OnLeave(aEvent:MouseEvent):void
+		{
+			dispatchEvent(new NavigationEvent(NavigationEvent.LEAVE));
 		}
 	}
 }
