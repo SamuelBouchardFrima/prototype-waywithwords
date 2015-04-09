@@ -30,22 +30,22 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			switch (mState.Name)
 			{
 				case "Petrified":
-					mDialog.text = "The boy is turned stone.\nWhat is his name?";
+					mDialog.text = "I am ___.";
 					break;
 				case "Angry":
-					mDialog.text = "I am Sam.\nI am sad or mad?";
+					mDialog.text = "I am Sam.\nAm I sad or mad?";
 					break;
 				case "HotTired":
-					mDialog.text = "I am mad!\nWhat do I need?";
+					mDialog.text = "I am mad!\nI need a ___?";
 					break;
 				case "Hot":
-					mDialog.text = "A mat for me!\nWhat else do I need?";
+					mDialog.text = "A mat for me!\nI need a ___?";
 					break;
 				case "Tired":
-					mDialog.text = "A fan for me!\nWhat else do I need?";
+					mDialog.text = "A fan for me!\nI need a ___?";
 					break;
 				case "Happy":
-					mDialog.text = "A mat and a fan for me.\nThank you very much!";
+					mDialog.text = "A mat for me!\nA fan for me!";
 					break;
 				default:
 					break;
@@ -85,7 +85,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			}
 			else
 			{
-				mDialog.text = "It is not his name.\nWhat is his name?";
+				mDialog.text = "I am ___.";
 				DispatchTrivialStateChange();
 			}
 			mDialog.setTextFormat(mDialogFormat);
@@ -99,12 +99,12 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			}
 			else if (aInput == "sad")
 			{
-				mDialog.text = "I am not sad!\nI am mad?";
+				mDialog.text = "I am not sad!\nAm I mad?";
 				DispatchTrivialStateChange();
 			}
 			else
 			{
-				mDialog.text = "I am sad or mad?";
+				mDialog.text = "Am I sad or mad?";
 				DispatchTrivialStateChange();
 			}
 			mDialog.setTextFormat(mDialogFormat);
@@ -121,7 +121,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 				}
 				else
 				{
-					mDialog.text = "Yes, I need a mat.\nDo you have one?";
+					mDialog.text = "I need a mat.";
 					DispatchTrivialStateChange();
 				}
 			}
@@ -134,13 +134,13 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 				}
 				else
 				{
-					mDialog.text = "Yes, I need a fan.\nDo you have one?";
+					mDialog.text = "I need a fan.";
 					DispatchTrivialStateChange();
 				}
 			}
 			else
 			{
-				mDialog.text = "I don't need that!\nWhat else do I need?";
+				mDialog.text = "I need a ___?";
 				DispatchTrivialStateChange();
 			}
 			mDialog.setTextFormat(mDialogFormat);
@@ -157,13 +157,13 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 				}
 				else
 				{
-					mDialog.text = "Yes, I need a fan.\nDo you have one?";
+					mDialog.text = "I need a fan.";
 					DispatchTrivialStateChange();
 				}
 			}
 			else
 			{
-				mDialog.text = "I don't need that!\nWhat else do I need?";
+				mDialog.text = "I need a ___?";
 				DispatchTrivialStateChange();
 			}
 			mDialog.setTextFormat(mDialogFormat);
@@ -180,13 +180,13 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 				}
 				else
 				{
-					mDialog.text = "Yes, I need a mat.\nDo you have one?";
+					mDialog.text = "I need a mat.";
 					DispatchTrivialStateChange();
 				}
 			}
 			else
 			{
-				mDialog.text = "I don't need that!\nWhat else do I need?";
+				mDialog.text = "I need a ___?";
 				DispatchTrivialStateChange();
 			}
 			mDialog.setTextFormat(mDialogFormat);

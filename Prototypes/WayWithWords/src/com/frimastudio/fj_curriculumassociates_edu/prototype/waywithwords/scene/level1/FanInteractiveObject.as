@@ -25,10 +25,10 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			switch (mState.Name)
 			{
 				case "Petrified":
-					mDialog.text = "The object is turned stone.\nWhat is its name?";
+					mDialog.text = "I am a ___.";
 					break;
 				case "Collected":
-					mDialog.text = "It is a fan.";
+					mDialog.text = "I am a fan.";
 					break;
 				default:
 					break;
@@ -57,7 +57,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			}
 			else
 			{
-				mDialog.text = "It is not its name.\nWhat is its name?";
+				mDialog.text = "I am a ___.";
 				DispatchTrivialStateChange();
 			}
 			mDialog.setTextFormat(mDialogFormat);
