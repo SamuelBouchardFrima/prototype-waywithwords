@@ -17,25 +17,37 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 			super(aRetractedAnchor, aDeployedAnchor);
 			
 			graphics.lineStyle(1, 0xCCCCCC);
-			graphics.moveTo(-45, -45);
-			graphics.lineTo(45, -45);
-			graphics.lineTo(45, 130);
-			graphics.lineTo(-45, 130);
-			graphics.lineTo(-45, -45);
+			graphics.moveTo(-45, -120);
+			graphics.lineTo(45, -120);
+			graphics.lineTo(45, 140);
+			graphics.lineTo(-45, 140);
+			graphics.lineTo(-45, -120);
+			graphics.moveTo(-45, -40);
+			graphics.lineTo(45, -40);
+			
+			var inventoryIcon:Bitmap = new Asset.InventoryIconBitmap();
+			inventoryIcon.width = inventoryIcon.height = 60;
+			inventoryIcon.x = -30;
+			inventoryIcon.y = -110;
+			addChild(inventoryIcon);
 			
 			mIconList = new Vector.<Bitmap>();
 			
 			AddIcon(Asset.MatIconBitmap, Inventory.Instance.HasItem(Item.MAT));
 			AddIcon(Asset.FanIconBitmap, Inventory.Instance.HasItem(Item.FAN));
 			
+			Inventory.Instance.addEventListener(InventoryEvent.RESET, OnReset);
 			Inventory.Instance.addEventListener(InventoryEvent.ITEM_ADDED, OnItemAdded);
 			Inventory.Instance.addEventListener(InventoryEvent.ITEM_USED, OnItemUsed);
 		}
 		
-		public function Dispose():void
+		override public function Dispose():void
 		{
+			Inventory.Instance.removeEventListener(InventoryEvent.RESET, OnReset);
 			Inventory.Instance.removeEventListener(InventoryEvent.ITEM_ADDED, OnItemAdded);
 			Inventory.Instance.removeEventListener(InventoryEvent.ITEM_USED, OnItemUsed);
+			
+			super.Dispose();
 		}
 		
 		private function AddIcon(aAsset:Class, aCollected:Boolean):void
@@ -47,6 +59,18 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 			if (aCollected)
 			{
 				addChild(icon);
+			}
+		}
+		
+		private function OnReset(aEvent:InventoryEvent):void
+		{
+			for (var i:int = 0, end:int = mIconList.length; i < end; ++i)
+			{
+				mIconList[i].alpha = 1;
+				if (contains(mIconList[i]))
+				{
+					removeChild(mIconList[i]);
+				}
 			}
 		}
 		

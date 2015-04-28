@@ -6,6 +6,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.InteractiveObject;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.InteractiveObjectEvent;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.InteractiveObjectState;
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.InteractiveObjectType;
 	import flash.display.Bitmap;
 	
 	public class SamInteractiveObject extends InteractiveObject
@@ -20,7 +21,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			stateList.push(new InteractiveObjectState(4, "Tired", new Asset.Sam05Bitmap(), "tnamf", true));
 			stateList.push(new InteractiveObjectState(5, "Happy", new Asset.Sam06Bitmap()));
 			
-			super(stateList);
+			super(stateList, InteractiveObjectType.QUEST);
 		}
 		
 		override public function SetState(aID:int, aProgressBreadcrumb:Boolean = true):void
@@ -79,115 +80,173 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 		
 		private function HandleInputFromPetrifiedState(aInput:String):void
 		{
-			if (aInput == "Sam")
+			switch (aInput)
 			{
-				SetState(1);
-			}
-			else
-			{
-				mDialog.text = "I am ___.";
-				DispatchTrivialStateChange();
+				case "Sam":
+					SetState(1);
+					break;
+				case "a":
+				case "am":
+				case "at":
+				case "mat":
+					mDialog.text = "I am not " + aInput + ".\nI am ___.";
+					DispatchTrivialStateChange();
+					break;
+				default:
+					mDialog.text = "I am ___.";
+					DispatchInputError();
+					break;
 			}
 			mDialog.setTextFormat(mDialogFormat);
 		}
 		
 		private function HandleInputFromAngryState(aInput:String):void
 		{
-			if (aInput == "mad")
+			switch (aInput)
 			{
-				SetState(2);
-			}
-			else if (aInput == "sad")
-			{
-				mDialog.text = "I am not sad!\nAm I mad?";
-				DispatchTrivialStateChange();
-			}
-			else
-			{
-				mDialog.text = "Am I sad or mad?";
-				DispatchTrivialStateChange();
+				case "mad":
+					SetState(2);
+					break;
+				case "sad":
+					mDialog.text = "I am not sad!\nAm I mad?";
+					DispatchTrivialStateChange();
+					break;
+				case "a":
+				case "ad":
+				case "am":
+				case "as":
+					mDialog.text = "I am not " + aInput + "!\nAm I sad or mad?";
+					DispatchTrivialStateChange();
+					break;
+				default:
+					mDialog.text = "Am I sad or mad?";
+					DispatchInputError();
+					break;
 			}
 			mDialog.setTextFormat(mDialogFormat);
 		}
 		
 		private function HandleInputFromHotTiredState(aInput:String):void
 		{
-			if (aInput == "mat")
+			switch (aInput)
 			{
-				if (Inventory.Instance.HasItem(Item.MAT))
-				{
-					UseItem(Item.MAT);
-					SetState(3);
-				}
-				else
-				{
-					mDialog.text = "I need a mat.";
+				case "mat":
+					if (Inventory.Instance.HasItem(Item.MAT))
+					{
+						UseItem(Item.MAT);
+						SetState(3);
+					}
+					else
+					{
+						mDialog.text = "I need a mat.\nYou do not have a mat.";
+						DispatchTrivialStateChange();
+						DispatchStateBlock();
+					}
+					break;
+				case "fan":
+					if (Inventory.Instance.HasItem(Item.FAN))
+					{
+						UseItem(Item.FAN);
+						SetState(4);
+					}
+					else
+					{
+						mDialog.text = "I need a fan.\nYou do not have a fan.";
+						DispatchTrivialStateChange();
+						DispatchStateBlock();
+					}
+					break;
+				case "a":
+				case "am":
+				case "an":
+				case "ant":
+				case "at":
+				case "fat":
+				case "man":
+				case "tan":
+					mDialog.text = "I do not need a " + aInput + ".\nI need a ___?";
 					DispatchTrivialStateChange();
-				}
-			}
-			else if (aInput == "fan")
-			{
-				if (Inventory.Instance.HasItem(Item.FAN))
-				{
-					UseItem(Item.FAN);
-					SetState(4);
-				}
-				else
-				{
-					mDialog.text = "I need a fan.";
-					DispatchTrivialStateChange();
-				}
-			}
-			else
-			{
-				mDialog.text = "I need a ___?";
-				DispatchTrivialStateChange();
+					break;
+				default:
+					mDialog.text = "I need a ___?";
+					DispatchInputError();
+					break;
 			}
 			mDialog.setTextFormat(mDialogFormat);
 		}
 		
 		private function HandleInputFromHotState(aInput:String):void
 		{
-			if (aInput == "fan")
+			switch (aInput)
 			{
-				if (Inventory.Instance.HasItem(Item.FAN))
-				{
-					UseItem(Item.FAN);
-					SetState(5);
-				}
-				else
-				{
-					mDialog.text = "I need a fan.";
+				case "fan":
+					if (Inventory.Instance.HasItem(Item.FAN))
+					{
+						UseItem(Item.FAN);
+						SetState(5);
+						DispatchStateBlock();
+					}
+					else
+					{
+						mDialog.text = "I need a fan.\nYou do not have a fan.";
+						DispatchTrivialStateChange();
+						DispatchStateBlock();
+					}
+					break;
+				case "a":
+				case "am":
+				case "an":
+				case "ant":
+				case "at":
+				case "fat":
+				case "man":
+				case "mat":
+				case "tan":
+					mDialog.text = "I do not need a " + aInput + ".\nI need a ___?";
 					DispatchTrivialStateChange();
-				}
-			}
-			else
-			{
-				mDialog.text = "I need a ___?";
-				DispatchTrivialStateChange();
+					break;
+				default:
+					mDialog.text = "I need a ___?";
+					DispatchInputError();
+					break;
 			}
 			mDialog.setTextFormat(mDialogFormat);
 		}
 		
 		private function HandleInputFromTiredState(aInput:String):void
 		{
-			if (aInput == "mat")
+			switch (aInput)
 			{
-				if (Inventory.Instance.HasItem(Item.MAT))
-				{
-					UseItem(Item.MAT);
-					SetState(5);
-				}
-				else
-				{
-					mDialog.text = "I need a mat.";
+				case "mat":
+					if (Inventory.Instance.HasItem(Item.MAT))
+					{
+						UseItem(Item.MAT);
+						SetState(5);
+						DispatchStateBlock();
+					}
+					else
+					{
+						mDialog.text = "I need a mat.\nYou do not have a mat.";
+						DispatchTrivialStateChange();
+						DispatchStateBlock();
+					}
+					break;
+				case "a":
+				case "am":
+				case "an":
+				case "ant":
+				case "at":
+				case "fan":
+				case "fat":
+				case "man":
+				case "tan":
+					mDialog.text = "I do not need a " + aInput + ".\nI need a ___?";
 					DispatchTrivialStateChange();
-				}
-			}
-			else
-			{
-				mDialog.text = "I need a ___?";
-				DispatchTrivialStateChange();
+					break;
+				default:
+					mDialog.text = "I need a ___?";
+					DispatchInputError();
+					break;
 			}
 			mDialog.setTextFormat(mDialogFormat);
 		}

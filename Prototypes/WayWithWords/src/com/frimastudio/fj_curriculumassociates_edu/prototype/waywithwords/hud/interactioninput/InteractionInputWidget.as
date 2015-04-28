@@ -1,7 +1,12 @@
 package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.interactioninput
 {
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.animation.Shaker;
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.Asset;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.RetractableWidget;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.WidgetButton;
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.WidgetIconButton;
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.keyboard.KeyboardManager;
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.keyboard.KeyboardManagerEvent;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.util.Random;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -48,19 +53,31 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 			mSubmitButton.addEventListener(MouseEvent.CLICK, OnSubmit);
 			addChild(mSubmitButton);
 			
-			mEraseButton = new WidgetButton("X", buttonRect, 0xCC0000);
+			mEraseButton = new WidgetIconButton(Asset.EraserIconBitmap, buttonRect, 0xCC0000);
 			mEraseButton.x = 585;
 			mEraseButton.y = -90;
 			mEraseButton.addEventListener(MouseEvent.CLICK, OnErase);
 			addChild(mEraseButton);
+			
+			KeyboardManager.Instance.addEventListener(KeyboardManagerEvent.ERASE_LAST, OnEraseLast);
+			KeyboardManager.Instance.addEventListener(KeyboardManagerEvent.ERASE_ALL, OnEraseAll);
+			KeyboardManager.Instance.addEventListener(KeyboardManagerEvent.REQUEST_SUBMIT, OnRequestSubmit);
+			KeyboardManager.Instance.addEventListener(KeyboardManagerEvent.TYPE, OnType);
 		}
 		
-		public function Dispose():void
+		override public function Dispose():void
 		{
 			ClearLetterLists();
 			
 			mSubmitButton.removeEventListener(MouseEvent.CLICK, OnSubmit);
 			mEraseButton.removeEventListener(MouseEvent.CLICK, OnErase);
+			
+			KeyboardManager.Instance.removeEventListener(KeyboardManagerEvent.ERASE_LAST, OnEraseLast);
+			KeyboardManager.Instance.removeEventListener(KeyboardManagerEvent.ERASE_ALL, OnEraseAll);
+			KeyboardManager.Instance.removeEventListener(KeyboardManagerEvent.REQUEST_SUBMIT, OnRequestSubmit);
+			KeyboardManager.Instance.removeEventListener(KeyboardManagerEvent.TYPE, OnType);
+			
+			super.Dispose();
 		}
 		
 		public function SetLetterSelection(aLetterSelection:String):void
@@ -105,6 +122,15 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 			}
 			
 			RefreshCurrentWord();
+		}
+		
+		public function InputError():void
+		{
+			var vector2:Point = new Point(0, 2);
+			for (var i:int = 0, end:int = mSelectedLetterList.length; i < end; ++i)
+			{
+				new Shaker(mSelectedLetterList[i], 500, vector2);
+			}
 		}
 		
 		private function ClearLetterLists():void 
@@ -248,7 +274,6 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 		private function OnSubmit(aEvent:MouseEvent):void
 		{
 			dispatchEvent(new InteractionInputEvent(InteractionInputEvent.SUBMIT, mCurrentWord));
-			SetLetterSelection(mLetterSelection);
 		}
 		
 		private function OnErase(aEvent:MouseEvent):void
@@ -260,6 +285,69 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 			}
 			mSelectedLetterList.splice(0, mSelectedLetterList.length);
 			RefreshCurrentWord();
+		}
+		
+		private function OnEraseLast(aEvent:KeyboardManagerEvent):void
+		{
+			if (!stage)
+			{
+				return;
+			}
+			
+			if (mSelectedLetterList.length > 0)
+			{
+				AddSelectableLetter(mSelectedLetterList[mSelectedLetterList.length - 1].Character);
+				RemoveSelectedLetter(mSelectedLetterList[mSelectedLetterList.length - 1], false);
+			}
+			mSelectedLetterList.splice(mSelectedLetterList.length - 1, 1);
+			RefreshCurrentWord();
+		}
+		
+		private function OnEraseAll(aEvent:KeyboardManagerEvent):void
+		{
+			if (!stage)
+			{
+				return;
+			}
+			
+			for (var i:int = 0, end:int = mSelectedLetterList.length; i < end; ++i)
+			{
+				AddSelectableLetter(mSelectedLetterList[i].Character);
+				RemoveSelectedLetter(mSelectedLetterList[i], false);
+			}
+			mSelectedLetterList.splice(0, mSelectedLetterList.length);
+			RefreshCurrentWord();
+		}
+		
+		private function OnRequestSubmit(aEvent:KeyboardManagerEvent):void
+		{
+			if (!stage)
+			{
+				return;
+			}
+			
+			dispatchEvent(new InteractionInputEvent(InteractionInputEvent.SUBMIT, mCurrentWord));
+			SetLetterSelection(mLetterSelection);
+		}
+		
+		private function OnType(aEvent:KeyboardManagerEvent):void
+		{
+			if (!stage)
+			{
+				return;
+			}
+			
+			for (var i:int = 0, end:int = mSelectableLetterList.length; i < end; ++i)
+			{
+				if (mSelectableLetterList[i])
+				{
+					if (mSelectableLetterList[i].Character.toLowerCase() == aEvent.Character.toLowerCase())
+					{
+						SelectLetter(mSelectableLetterList[i]);
+						break;
+					}
+				}
+			}
 		}
 		
 		private function OnLetterDragged(aEvent:SelectableLetterEvent):void

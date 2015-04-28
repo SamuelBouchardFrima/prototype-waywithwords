@@ -4,12 +4,13 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.inven
 	
 	public class InventoryEvent extends Event
 	{
+		public static const RESET:String = "InventoryEvent::RESET";
 		public static const ITEM_ADDED:String = "InventoryEvent::ITEM_ADDED";
 		public static const ITEM_USED:String = "InventoryEvent::ITEM_USED";
 		
 		public var EventItem:Item;
 		
-		public function InventoryEvent(type:String, aItem:Item, bubbles:Boolean=false, cancelable:Boolean=false)
+		public function InventoryEvent(type:String, aItem:Item = null, bubbles:Boolean=false, cancelable:Boolean=false)
 		{
 			super(type, bubbles, cancelable);
 			

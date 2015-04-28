@@ -8,6 +8,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.navigation.NavigationWidget;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.Widget;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.interactioninput.InteractionInputWidget;
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.keyboard.KeyboardManager;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.InteractiveObjectEvent;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.InteractiveObjectState;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.level1.Level1;
@@ -35,7 +36,9 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords
 			addChild(SceneManager.Instance.SceneContainer);
 			addChild(HUD.Instance as DisplayObject);
 			
-			SceneManager.Instance.ShowScene(Level1.LevelScene);
+			KeyboardManager.Instance.KeyboardDispatcher = stage;
+			
+			SceneManager.Instance.ShowScene(Level1.Instance.LevelScene);
 		}
 		
 		private function Dispose():void

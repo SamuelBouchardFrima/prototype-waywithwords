@@ -13,9 +13,12 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 	
 	public class SelectableLetter extends Sprite
 	{
+		//private static const DRAG_SPEED:Number = 10;
+		
 		private var mCharacter:String;
 		private var mSelected:Boolean;
 		private var mDragOrigin:Point;
+		private var mDragAim:Point;
 		private var mEnableClickTimer:Timer;
 		
 		public function get Character():String
@@ -86,10 +89,14 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 				mEnableClickTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, OnTimerComplete);
 			}
 			
+			removeEventListener(Event.ENTER_FRAME, OnEnterFrame);
 			removeEventListener(MouseEvent.MOUSE_DOWN, OnMouseDown);
-			stage.removeEventListener(MouseEvent.MOUSE_MOVE, OnMouseMove);
-			removeEventListener(MouseEvent.MOUSE_UP, OnMouseUp);
 			removeEventListener(MouseEvent.CLICK, OnClick);
+			if (stage)
+			{
+				stage.removeEventListener(MouseEvent.MOUSE_MOVE, OnMouseMove);
+				stage.removeEventListener(MouseEvent.MOUSE_UP, OnMouseUp);
+			}
 		}
 		
 		private function DelayStartDrag():void
@@ -102,27 +109,40 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 		private function StartDrag():void
 		{
 			mDragOrigin = null;
+			mDragAim = new Point(x, y);
 			
 			parent.addChild(this);
 			
-			addEventListener(MouseEvent.MOUSE_UP, OnMouseUp);
+			addEventListener(Event.ENTER_FRAME, OnEnterFrame);
 			removeEventListener(MouseEvent.CLICK, OnClick);
+			stage.addEventListener(MouseEvent.MOUSE_UP, OnMouseUp);
 			
 			dispatchEvent(new SelectableLetterEvent(SelectableLetterEvent.DRAGGED));
 		}
 		
+		private function UpdateDragAim():void
+		{
+			var distance:Point = new Point(parent.mouseX, parent.mouseY).subtract(mDragAim);
+			mDragAim.x += distance.x / 2;
+			mDragAim.y += distance.y / 2;
+		}
+		
 		private function UpdateDrag():void
 		{
-			x = parent.mouseX;
-			y = parent.mouseY;
+			var distance:Point = mDragAim.subtract(new Point(x, y));
+			x += distance.x / 2;
+			y += distance.y / 2;
 			
 			dispatchEvent(new SelectableLetterEvent(SelectableLetterEvent.DRAGGED));
 		}
 		
 		private function StopDrag():void
 		{
+			removeEventListener(Event.ENTER_FRAME, OnEnterFrame);
 			stage.removeEventListener(MouseEvent.MOUSE_MOVE, OnMouseMove);
 			mEnableClickTimer.start();
+			
+			mDragAim = null;
 			
 			dispatchEvent(new SelectableLetterEvent(SelectableLetterEvent.DROPPED));
 		}
@@ -156,8 +176,13 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 			}
 			else
 			{
-				UpdateDrag();
+				UpdateDragAim();
 			}
+		}
+		
+		private function OnEnterFrame(aEvent:Event):void
+		{
+			UpdateDrag();
 		}
 		
 		private function OnMouseUp(aEvent:MouseEvent):void
@@ -167,6 +192,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 		
 		private function OnTimerComplete(aEvent:TimerEvent):void
 		{
+			mEnableClickTimer.stop();
 			EnableClickListener();
 		}
 		

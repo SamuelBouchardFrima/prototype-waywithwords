@@ -26,7 +26,6 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			super();
 			
 			mNavigationWidget = new NavigationWidget(new Point(50, -50), new Point(50, 50));
-			mNavigationWidget.addEventListener(NavigationEvent.REWIND, OnRewind);
 			mNavigationWidget.addEventListener(NavigationEvent.LEAVE, OnLeave);
 			
 			mInputWidget = new InteractionInputWidget(new Point(100, 600 + 120), new Point(100, 600 - 100));
@@ -44,28 +43,21 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			mInteractiveObject.x = 60;
 			mInteractiveObject.y = 100;
 			mInteractiveObject.addEventListener(InteractiveObjectEvent.STATE_CHANGE, OnStateChange);
-			mInteractiveObject.addEventListener(InteractiveObjectEvent.ENABLE_REWIND, OnEnableRewind);
+			mInteractiveObject.addEventListener(InteractiveObjectEvent.STATE_BLOCK, OnStateBlock);
+			mInteractiveObject.addEventListener(InteractiveObjectEvent.INPUT_ERROR, OnInputError);
 			mInteractiveObject.SetState(0);
 			addChild(mInteractiveObject);
-			
-			mNavigationWidget.RewindDisabled = true;
 		}
 		
 		override public function Dispose():void
 		{
-			mNavigationWidget.removeEventListener(NavigationEvent.REWIND, OnRewind);
 			mNavigationWidget.removeEventListener(NavigationEvent.LEAVE, OnLeave);
 			mInputWidget.removeEventListener(InteractionInputEvent.SUBMIT, OnSubmitInteractionInput);
 			mInteractiveObject.removeEventListener(InteractiveObjectEvent.STATE_CHANGE, OnStateChange);
-			mInteractiveObject.removeEventListener(InteractiveObjectEvent.ENABLE_REWIND, OnEnableRewind);
+			mInteractiveObject.removeEventListener(InteractiveObjectEvent.STATE_BLOCK, OnStateBlock);
+			mInteractiveObject.removeEventListener(InteractiveObjectEvent.INPUT_ERROR, OnInputError);
 			
 			super.Dispose();
-		}
-		
-		protected function OnRewind(aEvent:NavigationEvent):void
-		{
-			mInteractiveObject.ResetToCurrentState();
-			mNavigationWidget.RewindDisabled = true;
 		}
 		
 		protected function OnLeave(aEvent:NavigationEvent):void
@@ -81,12 +73,16 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 		protected function OnStateChange(aEvent:InteractiveObjectEvent):void
 		{
 			mInputWidget.SetLetterSelection(aEvent.State.LetterSelection);
-			mNavigationWidget.RewindDisabled = true;
 		}
 		
-		protected function OnEnableRewind(aEvent:InteractiveObjectEvent):void
+		protected function OnStateBlock(aEvent:InteractiveObjectEvent):void
 		{
-			mNavigationWidget.RewindDisabled = false;
+			mNavigationWidget.StateBlocked();
+		}
+		
+		protected function OnInputError(aEvent:InteractiveObjectEvent):void
+		{
+			mInputWidget.InputError();
 		}
 	}
 }

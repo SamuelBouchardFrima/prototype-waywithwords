@@ -26,6 +26,12 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.inven
 			mItemList = new Vector.<Item>();
 		}
 		
+		public function Reset():void
+		{
+			mItemList.splice(0, mItemList.length);
+			dispatchEvent(new InventoryEvent(InventoryEvent.RESET));
+		}
+		
 		public function AddItem(aItem:Item):void
 		{
 			if (!HasItem(aItem))

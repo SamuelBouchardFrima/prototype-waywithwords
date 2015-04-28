@@ -13,5 +13,13 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud
 		{
 			mWidgetList = (aWidgetList ? aWidgetList : new Vector.<Widget>);
 		}
+		
+		public function Dispose():void
+		{
+			for (var i:int = 0, end:int = mWidgetList.length; i < end; ++i)
+			{
+				mWidgetList[i].Dispose();
+			}
+		}
 	}
 }

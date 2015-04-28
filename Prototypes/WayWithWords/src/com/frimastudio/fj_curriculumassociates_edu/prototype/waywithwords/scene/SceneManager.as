@@ -57,7 +57,10 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			{
 				mSceneStack.pop().LeaveScene();
 			}
-			mSceneStack[mSceneStack.length - 1].ShowScene();
+			if (mSceneStack.length > 0)
+			{
+				mSceneStack[mSceneStack.length - 1].ShowScene();
+			}
 		}
 	}
 }

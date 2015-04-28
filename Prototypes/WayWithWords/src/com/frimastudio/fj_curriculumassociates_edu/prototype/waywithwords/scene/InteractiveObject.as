@@ -12,6 +12,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 	
 	public class InteractiveObject extends Sprite
 	{
+		protected var mType:InteractiveObjectType;
 		protected var mStateList:Vector.<InteractiveObjectState>;
 		protected var mState:InteractiveObjectState;
 		protected var mStateBreadcrumb:Vector.<InteractiveObjectState>;
@@ -20,12 +21,17 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 		protected var mPicture:Bitmap;
 		protected var mOwnedItemList:Vector.<Bitmap>;
 		
+		public function get Type():InteractiveObjectType
+		{
+			return mType;
+		}
+		
 		public function get State():InteractiveObjectState
 		{
 			return mState;
 		}
 		
-		public function InteractiveObject(aStateList:Vector.<InteractiveObjectState>)
+		public function InteractiveObject(aStateList:Vector.<InteractiveObjectState>, aType:InteractiveObjectType)
 		{
 			super();
 			
@@ -33,6 +39,8 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			{
 				throw new Error("An InteractiveObject requires a non-empty state list to be created.");
 			}
+			
+			mType = aType;
 			
 			mDialogFormat = new TextFormat();
 			mDialogFormat.size = 40;
@@ -85,23 +93,21 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 		protected function DispatchTrivialStateChange():void 
 		{
 			dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.STATE_CHANGE, mState));
-			dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.ENABLE_REWIND, mState));
+		}
+		
+		protected function DispatchStateBlock():void
+		{
+			dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.STATE_BLOCK, mState));
+		}
+		
+		protected function DispatchInputError():void
+		{
+			dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.INPUT_ERROR));
 		}
 		
 		public function ResetToCurrentState():void
 		{
 			SetState(mState.ID);
-		}
-		
-		public function RewindDialog():void
-		{
-			if (mStateBreadcrumb.length <= 0)
-			{
-				return;
-			}
-			
-			var id:int = mStateBreadcrumb.pop().ID;
-			SetState(id, false);
 		}
 		
 		public function HandleInput(aInput:String):void

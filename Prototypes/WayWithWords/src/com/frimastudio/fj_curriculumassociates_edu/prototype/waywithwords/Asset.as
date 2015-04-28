@@ -17,6 +17,9 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords
 		[Embed(source = "../../../../../../art/Sam06.png")]
 		public static var Sam06Bitmap:Class;
 		
+		[Embed(source = "../../../../../../art/BackpackIcon.png")]
+		public static var InventoryIconBitmap:Class;
+		
 		[Embed(source = "../../../../../../art/MatObject.png")]
 		public static var MatObjectBitmap:Class;
 		[Embed(source = "../../../../../../art/MatIcon.png")]
@@ -26,6 +29,20 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords
 		public static var FanObjectBitmap:Class;
 		[Embed(source = "../../../../../../art/FanIcon.png")]
 		public static var FanIconBitmap:Class;
+		
+		[Embed(source = "../../../../../../art/QuestIcon.png")]
+		public static var QuestIconBitmap:Class;
+		[Embed(source = "../../../../../../art/GrabIcon.png")]
+		public static var GrabIconBitmap:Class;
+		[Embed(source = "../../../../../../art/SpeechBubbleIcon.png")]
+		public static var SpeechBubbleIconBitmap:Class;
+		[Embed(source = "../../../../../../art/GreenArrowIcon.png")]
+		public static var ArrowIconBitmap:Class;
+		
+		[Embed(source = "../../../../../../art/ResetIcon.png")]
+		public static var ResetIconBitmap:Class;
+		[Embed(source = "../../../../../../art/EraserIcon.png")]
+		public static var EraserIconBitmap:Class;
 		
 		public function Asset()
 		{

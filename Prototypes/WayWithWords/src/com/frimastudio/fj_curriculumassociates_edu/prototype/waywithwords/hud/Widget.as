@@ -14,5 +14,9 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud
 			x = mAnchor.x;
 			y = mAnchor.y;
 		}
+		
+		public function Dispose():void
+		{
+		}
 	}
 }

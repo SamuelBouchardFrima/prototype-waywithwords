@@ -5,6 +5,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.inven
 	
 	public interface IInventory extends IEventDispatcher
 	{
+		function Reset():void;
 		function AddItem(aItem:Item):void;
 		function HasItem(aItem:Item):Boolean;
 		function UseItem(aItem:Item):void;

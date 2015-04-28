@@ -5,11 +5,12 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 	public class InteractiveObjectEvent extends Event
 	{
 		public static const STATE_CHANGE:String = "InteractiveObjectEvent::STATE_CHANGE";
-		public static const ENABLE_REWIND:String = "InteractiveObjectEvent::ENABLE_REWIND";
+		public static const STATE_BLOCK:String = "InteractiveObjectEvent::STATE_BLOCK";
+		public static const INPUT_ERROR:String = "InteractiveObjectEvent::INPUT_ERROR";
 		
 		public var State:InteractiveObjectState;
 		
-		public function InteractiveObjectEvent(type:String, aState:InteractiveObjectState, bubbles:Boolean = false,
+		public function InteractiveObjectEvent(type:String, aState:InteractiveObjectState = null, bubbles:Boolean = false,
 			cancelable:Boolean=false)
 		{
 			super(type, bubbles, cancelable);

@@ -15,6 +15,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 		
 		public function Dispose():void
 		{
+			mHudComposition.Dispose();
 		}
 		
 		public function ShowScene():void

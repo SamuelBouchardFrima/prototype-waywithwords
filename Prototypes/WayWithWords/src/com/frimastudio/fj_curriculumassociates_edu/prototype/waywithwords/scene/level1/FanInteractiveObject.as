@@ -6,6 +6,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.InteractiveObject;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.InteractiveObjectEvent;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.InteractiveObjectState;
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.InteractiveObjectType;
 	
 	public class FanInteractiveObject extends InteractiveObject
 	{
@@ -15,7 +16,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			stateList.push(new InteractiveObjectState(0, "Petrified", new Asset.FanObjectBitmap(), "tnaf"));
 			stateList.push(new InteractiveObjectState(1, "Collected"));
 			
-			super(stateList);
+			super(stateList, InteractiveObjectType.COLLECTABLE);
 		}
 		
 		override public function SetState(aID:int, aProgressBreadcrumb:Boolean = true):void
@@ -50,15 +51,26 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 		
 		private function HandleInputFromPetrifiedState(aInput:String):void
 		{
-			if (aInput == "fan")
+			switch (aInput)
 			{
-				Inventory.Instance.AddItem(Item.FAN);
-				SetState(1);
-			}
-			else
-			{
-				mDialog.text = "I am a ___.";
-				DispatchTrivialStateChange();
+				case "fan":
+					Inventory.Instance.AddItem(Item.FAN);
+					SetState(1);
+					DispatchStateBlock();
+					break;
+				case "a":
+				case "an":
+				case "ant":
+				case "at":
+				case "fat":
+				case "tan":
+					mDialog.text = "I am not a " + aInput + ".\nI am a ___.";
+					DispatchTrivialStateChange();
+					break;
+				default:
+					mDialog.text = "I am a ___.";
+					DispatchInputError();
+					break;
 			}
 			mDialog.setTextFormat(mDialogFormat);
 		}
