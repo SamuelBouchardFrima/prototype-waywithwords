@@ -7,6 +7,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.navigation.NavigationEvent;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.navigation.NavigationWidget;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.Widget;
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.transition.BlackFadeTransition;
 	import flash.geom.Point;
 	
 	public class InteractiveObjectScene extends Scene
@@ -62,7 +63,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 		
 		protected function OnLeave(aEvent:NavigationEvent):void
 		{
-			SceneManager.Instance.LeaveScene(this);
+			SceneManager.Instance.ShowTransition(new BlackFadeTransition(this, null, 500));
 		}
 		
 		protected function OnSubmitInteractionInput(aEvent:InteractionInputEvent):void

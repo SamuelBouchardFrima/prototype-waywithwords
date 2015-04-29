@@ -8,6 +8,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.InteractiveObjectEvent;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.LevelScene;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.SceneManager;
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.transition.BlackFadeTransition;
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -194,7 +195,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 		
 		private function OnClickSam(aEvent:MouseEvent):void
 		{
-			SceneManager.Instance.ShowScene(Level1.Instance.SamScene);
+			SceneManager.Instance.ShowTransition(new BlackFadeTransition(this, Level1.Instance.SamScene, 500));
 		}
 		
 		private function OnMouseOverMat(aEvent:MouseEvent):void
@@ -217,7 +218,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 		
 		private function OnClickMat(aEvent:MouseEvent):void
 		{
-			SceneManager.Instance.ShowScene(Level1.Instance.MatScene);
+			SceneManager.Instance.ShowTransition(new BlackFadeTransition(this, Level1.Instance.MatScene, 500));
 		}
 		
 		private function OnMouseOverFan(aEvent:MouseEvent):void
@@ -240,7 +241,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 		
 		private function OnClickFan(aEvent:MouseEvent):void
 		{
-			SceneManager.Instance.ShowScene(Level1.Instance.FanScene);
+			SceneManager.Instance.ShowTransition(new BlackFadeTransition(this, Level1.Instance.FanScene, 500));
 		}
 		
 		private function OnItemAdded(aEvent:InventoryEvent):void

@@ -6,6 +6,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.a
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.inventory.Inventory;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.level1.Level1;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.SceneManager;
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.transition.BlackFadeTransition;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -36,7 +37,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.a
 		{
 			Level1.Instance.Reset();
 			Inventory.Instance.Reset();
-			SceneManager.Instance.ShowScene(Level1.Instance.LevelScene);
+			SceneManager.Instance.ShowTransition(new BlackFadeTransition(SceneManager.Instance.CurrentScene, Level1.Instance.LevelScene, 2000));
 		}
 	}
 }

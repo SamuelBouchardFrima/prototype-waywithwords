@@ -1,5 +1,7 @@
 package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 {
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.transition.Transition;
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.transition.TransitionEvent;
 	import flash.display.Sprite;
 	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
@@ -14,6 +16,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 		}
 		
 		private var mSceneContainer:Sprite;
+		private var mTransitionContainer:Sprite;
 		private var mSceneStack:Vector.<Scene>;
 		
 		public function get SceneContainer():Sprite
@@ -21,12 +24,37 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			return mSceneContainer;
 		}
 		
+		public function get TransitionContainer():Sprite
+		{
+			return mTransitionContainer;
+		}
+		
+		public function get CurrentScene():Scene
+		{
+			if (mSceneStack.length <= 0)
+			{
+				return null;
+			}
+			
+			return mSceneStack[mSceneStack.length - 1];
+		}
+		
 		public function SceneManager(target:IEventDispatcher = null)
 		{
 			super(target);
 			
 			mSceneContainer = new Sprite();
+			mTransitionContainer = new Sprite();
 			mSceneStack = new Vector.<Scene>();
+		}
+		
+		public function ShowTransition(aTransition:Transition):void
+		{
+			aTransition.addEventListener(TransitionEvent.SCENE_CHANGE, OnTransitionSceneChange);
+			aTransition.addEventListener(TransitionEvent.TRANSITION_END, OnTransitionEnd);
+			mTransitionContainer.addChild(aTransition);
+			
+			aTransition.Play();
 		}
 		
 		public function ShowScene(aScene:Scene):void
@@ -61,6 +89,31 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			{
 				mSceneStack[mSceneStack.length - 1].ShowScene();
 			}
+		}
+		
+		private function OnTransitionSceneChange(aEvent:TransitionEvent):void
+		{
+			if (!aEvent.SceneOut)
+			{
+				LeaveScene(mSceneStack[mSceneStack.length - 1]);
+			}
+			else if (mSceneStack.indexOf(aEvent.SceneOut) != -1)
+			{
+				LeaveScene(mSceneStack[mSceneStack.indexOf(aEvent.SceneOut) + 1]);
+			}
+			else
+			{
+				ShowScene(aEvent.SceneOut);
+			}
+		}
+		
+		private function OnTransitionEnd(aEvent:TransitionEvent):void
+		{
+			var transition:Transition = aEvent.currentTarget as Transition;
+			transition.removeEventListener(TransitionEvent.SCENE_CHANGE, OnTransitionSceneChange);
+			transition.removeEventListener(TransitionEvent.TRANSITION_END, OnTransitionEnd);
+			
+			mTransitionContainer.removeChild(transition);
 		}
 	}
 }

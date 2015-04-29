@@ -14,6 +14,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.level1.Level1;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.level1.SamInteractiveObject;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.SceneManager;
+	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene.transition.BlackFadeTransition;
 	import flash.display.Bitmap;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
@@ -35,10 +36,11 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords
 			
 			addChild(SceneManager.Instance.SceneContainer);
 			addChild(HUD.Instance as DisplayObject);
+			addChild(SceneManager.Instance.TransitionContainer);
 			
 			KeyboardManager.Instance.KeyboardDispatcher = stage;
 			
-			SceneManager.Instance.ShowScene(Level1.Instance.LevelScene);
+			SceneManager.Instance.ShowTransition(new BlackFadeTransition(SceneManager.Instance.CurrentScene, Level1.Instance.LevelScene, 2000));
 		}
 		
 		private function Dispose():void
