@@ -8,24 +8,30 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.keyboard.KeyboardManager;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.keyboard.KeyboardManagerEvent;
 	import com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.util.Random;
+	import com.greensock.easing.Bounce;
+	import com.greensock.TweenLite;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
+	import flash.utils.Timer;
 	
 	public class InteractionInputWidget extends RetractableWidget
 	{
 		private var mSelectedLetterSlots:Vector.<Point>;
+		private var mSelectedLetterSlotTiles:Vector.<LetterSlotTile>;
 		private var mSelectableLetterSlots:Vector.<Point>;
-		private var mSelectableLetterSlotTiles:Vector.<Sprite>;
+		private var mSelectableLetterSlotTiles:Vector.<LetterSlotTile>;
 		private var mSelectedLetterList:Vector.<SelectableLetter>;
 		private var mSelectableLetterList:Vector.<SelectableLetter>;
 		private var mSubmitButton:WidgetButton;
 		private var mEraseButton:WidgetButton;
 		private var mLetterSelection:String;
 		private var mCurrentWord:String;
+		private var mSelectableIdleAnimTimer:Timer;
 		
 		public function InteractionInputWidget(aRetractedAnchor:Point, aDeployedAnchor:Point)
 		{
@@ -39,25 +45,30 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 			graphics.lineTo(-65, -160);
 			
 			mSelectedLetterSlots = new Vector.<Point>();
+			mSelectedLetterSlotTiles = new Vector.<LetterSlotTile>();
 			mSelectableLetterSlots = new Vector.<Point>();
-			mSelectableLetterSlotTiles = new Vector.<Sprite>();
+			mSelectableLetterSlotTiles = new Vector.<LetterSlotTile>();
 			mSelectedLetterList = new Vector.<SelectableLetter>();
 			mSelectableLetterList = new Vector.<SelectableLetter>();
 			mCurrentWord = "";
 			
 			var buttonRect:Rectangle = new Rectangle(-20, -20, 40, 40);
 			
-			mSubmitButton = new WidgetButton(">", buttonRect, 0x00CC00);
+			mSubmitButton = new WidgetButton(">", buttonRect, 0xCCCCCC);
 			mSubmitButton.x = 535;
 			mSubmitButton.y = -90;
 			mSubmitButton.addEventListener(MouseEvent.CLICK, OnSubmit);
 			addChild(mSubmitButton);
 			
-			mEraseButton = new WidgetIconButton(Asset.EraserIconBitmap, buttonRect, 0xCC0000);
+			mEraseButton = new WidgetIconButton(Asset.EraserIconBitmap, buttonRect, 0xCCCCCC);
 			mEraseButton.x = 585;
 			mEraseButton.y = -90;
 			mEraseButton.addEventListener(MouseEvent.CLICK, OnErase);
 			addChild(mEraseButton);
+			
+			mSelectableIdleAnimTimer = new Timer(4000, 0);
+			mSelectableIdleAnimTimer.addEventListener(TimerEvent.TIMER, OnSelectableIdleAnimTimer);
+			mSelectableIdleAnimTimer.start();
 			
 			KeyboardManager.Instance.addEventListener(KeyboardManagerEvent.ERASE_LAST, OnEraseLast);
 			KeyboardManager.Instance.addEventListener(KeyboardManagerEvent.ERASE_ALL, OnEraseAll);
@@ -71,6 +82,9 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 			
 			mSubmitButton.removeEventListener(MouseEvent.CLICK, OnSubmit);
 			mEraseButton.removeEventListener(MouseEvent.CLICK, OnErase);
+			
+			mSelectableIdleAnimTimer.stop();
+			mSelectableIdleAnimTimer.removeEventListener(TimerEvent.TIMER, OnSelectableIdleAnimTimer);
 			
 			KeyboardManager.Instance.removeEventListener(KeyboardManagerEvent.ERASE_LAST, OnEraseLast);
 			KeyboardManager.Instance.removeEventListener(KeyboardManagerEvent.ERASE_ALL, OnEraseAll);
@@ -87,7 +101,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 			mLetterSelection = aLetterSelection;
 			
 			var slotX:int;
-			var tile:Sprite;
+			var tile:LetterSlotTile;
 			var i:int, end:int;
 			for (i = 0, end = aLetterSelection.length; i < end; ++i)
 			{
@@ -96,21 +110,19 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 				mSelectedLetterSlots.push(new Point(slotX, -90));
 				mSelectableLetterSlots.push(new Point(slotX, 10));
 				
-				tile = new Sprite();
+				tile = new LetterSlotTile();
+				tile.x = slotX;
+				tile.y = -90;
+				tile.StartPulseAnim(i * 100);
+				addChild(tile);
+				mSelectedLetterSlotTiles.push(tile);
+				
+				tile = new LetterSlotTile();
 				tile.x = slotX;
 				tile.y = 10;
-				
-				tile.graphics.lineStyle(0, 0x000000, 0);
-				tile.graphics.beginFill(0xCCCCCC);
-				tile.graphics.moveTo(-35, -35);
-				tile.graphics.lineTo(35, -35);
-				tile.graphics.lineTo(35, 35);
-				tile.graphics.lineTo(-35, 35);
-				tile.graphics.lineTo( -35, -35);
-				tile.graphics.endFill();
-				
-				mSelectableLetterSlotTiles.push(tile);
+				tile.Show();
 				addChild(tile);
+				mSelectableLetterSlotTiles.push(tile);
 			}
 			
 			var remainingLetters:String = aLetterSelection;
@@ -158,9 +170,12 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 			mSelectableLetterSlotTiles.splice(0, mSelectableLetterSlotTiles.length);
 			mSelectedLetterList.splice(0, mSelectedLetterList.length);
 			mSelectableLetterList.splice(0, mSelectableLetterList.length);
+			
+			RefreshButtonColor();
+			RefreshSlotTile();
 		}
 		
-		private function AddSelectedLetter(aCharacter:String, aIndex:int = -1):void
+		private function AddSelectedLetter(aCharacter:String, aIndex:int = -1, aOrigin:Point = null):void
 		{
 			var slot:Point;
 			var selectedLetter:SelectableLetter = new SelectableLetter(aCharacter);
@@ -174,15 +189,23 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 				slot = mSelectedLetterSlots[aIndex];
 				mSelectedLetterList.splice(aIndex, 0, selectedLetter);
 			}
-			selectedLetter.x = slot.x;
-			selectedLetter.y = slot.y;
+			if (aOrigin)
+			{
+				TweenLite.fromTo(selectedLetter, 0.2, { x:aOrigin.x }, { x:slot.x, overwrite:true, ease:Bounce.easeOut });
+				selectedLetter.y = slot.y;
+			}
+			else
+			{
+				selectedLetter.x = slot.x;
+				selectedLetter.y = slot.y;
+			}
 			selectedLetter.addEventListener(SelectableLetterEvent.DRAGGED, OnLetterDragged);
 			selectedLetter.addEventListener(SelectableLetterEvent.DROPPED, OnLetterDropped);
 			selectedLetter.addEventListener(SelectableLetterEvent.SELECTED, OnLetterUnselected);
 			addChild(selectedLetter);
 		}
 		
-		private function AddSelectableLetter(aCharacter:String, aIndex:int = -1):void
+		private function AddSelectableLetter(aCharacter:String, aIndex:int = -1, aOrigin:Point = null):void
 		{
 			var selectableLetter:SelectableLetter = new SelectableLetter(aCharacter);
 			
@@ -208,8 +231,16 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 			}
 			
 			var slot:Point = mSelectableLetterSlots[mSelectableLetterList.indexOf(selectableLetter)];
-			selectableLetter.x = slot.x;
-			selectableLetter.y = slot.y;
+			if (aOrigin)
+			{
+				TweenLite.fromTo(selectableLetter, 0.2, { x:aOrigin.x }, { x:slot.x, overwrite:true, ease:Bounce.easeOut });
+				selectableLetter.y = slot.y;
+			}
+			else
+			{
+				selectableLetter.x = slot.x;
+				selectableLetter.y = slot.y;
+			}
 			selectableLetter.addEventListener(SelectableLetterEvent.DRAGGED, OnLetterDragged);
 			selectableLetter.addEventListener(SelectableLetterEvent.DROPPED, OnLetterDropped);
 			selectableLetter.addEventListener(SelectableLetterEvent.SELECTED, OnLetterSelected);
@@ -234,6 +265,9 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 					mSelectedLetterList[i].y = mSelectedLetterSlots[i].y;
 				}
 			}
+			
+			RefreshButtonColor();
+			RefreshSlotTile();
 		}
 		
 		private function RemoveSelectableLetter(aLetter:SelectableLetter):void
@@ -249,17 +283,25 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 		private function SelectLetter(aLetter:SelectableLetter, aIndex:int = -1):void
 		{
 			var character:String = aLetter.Character;
+			var position:Point = new Point(aLetter.x, aLetter.y);
 			RemoveSelectableLetter(aLetter);
-			AddSelectedLetter(character, aIndex);
+			AddSelectedLetter(character, aIndex, position);
+			
 			RefreshCurrentWord();
+			RefreshButtonColor();
+			RefreshSlotTile();
 		}
 		
 		private function UnselectLetter(aLetter:SelectableLetter, aIndex:int = -1):void
 		{
 			var character:String = aLetter.Character;
+			var position:Point = new Point(aLetter.x, aLetter.y);
 			RemoveSelectedLetter(aLetter);
-			AddSelectableLetter(character, aIndex);
+			AddSelectableLetter(character, aIndex, position);
+			
 			RefreshCurrentWord();
+			RefreshButtonColor();
+			RefreshSlotTile();
 		}
 		
 		private function RefreshCurrentWord():void
@@ -271,41 +313,104 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 			}
 		}
 		
+		private function RefreshButtonColor():void
+		{
+			mSubmitButton.ButtonColor = (mSelectedLetterList.length > 0 ? 0x00CC00 : 0xCCCCCC);
+			mEraseButton.ButtonColor = (mSelectedLetterList.length > 0 ? 0xCC0000 : 0xCCCCCC);
+		}
+		
+		private function RefreshSlotTile():void
+		{
+			var i:int, end:int;
+			if (mSelectedLetterList.length > 0)
+			{
+				for (i = 0, end = mSelectedLetterSlotTiles.length; i < end; ++i)
+				{
+					if (i < mSelectedLetterList.length)
+					{
+						mSelectedLetterSlotTiles[i].Show();
+					}
+					else
+					{
+						mSelectedLetterSlotTiles[i].Hide();
+					}
+				}
+			}
+			else
+			{
+				for (i = 0, end = mSelectedLetterSlotTiles.length; i < end; ++i)
+				{
+					mSelectedLetterSlotTiles[i].StartPulseAnim(i * 100);
+				}
+			}
+		}
+		
+		private function OnSelectableIdleAnimTimer(aEvent:TimerEvent):void
+		{
+			var availableList:Vector.<SelectableLetter> = new Vector.<SelectableLetter>();
+			for (var i:int = 0, end:int = mSelectableLetterList.length; i < end; ++i)
+			{
+				if (mSelectableLetterList[i] != null)
+				{
+					availableList.push(mSelectableLetterList[i]);
+				}
+			}
+			
+			if (availableList.length > 0)
+			{
+				var letter:SelectableLetter = Random.FromList(availableList) as SelectableLetter;
+				new Shaker(letter, 500, new Point(0, 2));
+			}
+		}
+		
 		private function OnSubmit(aEvent:MouseEvent):void
 		{
+			if (mSelectedLetterList.length <= 0)
+			{
+				return;
+			}
+			
 			dispatchEvent(new InteractionInputEvent(InteractionInputEvent.SUBMIT, mCurrentWord));
 		}
 		
 		private function OnErase(aEvent:MouseEvent):void
 		{
+			if (mSelectedLetterList.length <= 0)
+			{
+				return;
+			}
+			
 			for (var i:int = 0, end:int = mSelectedLetterList.length; i < end; ++i)
 			{
 				AddSelectableLetter(mSelectedLetterList[i].Character);
 				RemoveSelectedLetter(mSelectedLetterList[i], false);
 			}
 			mSelectedLetterList.splice(0, mSelectedLetterList.length);
+			
 			RefreshCurrentWord();
+			RefreshButtonColor();
+			RefreshSlotTile();
 		}
 		
 		private function OnEraseLast(aEvent:KeyboardManagerEvent):void
 		{
-			if (!stage)
+			if (!stage || mSelectedLetterList.length <= 0)
 			{
 				return;
 			}
 			
-			if (mSelectedLetterList.length > 0)
-			{
-				AddSelectableLetter(mSelectedLetterList[mSelectedLetterList.length - 1].Character);
-				RemoveSelectedLetter(mSelectedLetterList[mSelectedLetterList.length - 1], false);
-			}
+			AddSelectableLetter(mSelectedLetterList[mSelectedLetterList.length - 1].Character);
+			RemoveSelectedLetter(mSelectedLetterList[mSelectedLetterList.length - 1], false);
 			mSelectedLetterList.splice(mSelectedLetterList.length - 1, 1);
+			
 			RefreshCurrentWord();
+			RefreshButtonColor();
+			RefreshSlotTile();
 		}
 		
 		private function OnEraseAll(aEvent:KeyboardManagerEvent):void
 		{
-			if (!stage)
+			if (!stage || mSelectedLetterList.length <= 0)
 			{
 				return;
 			}
@@ -316,12 +421,15 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 				RemoveSelectedLetter(mSelectedLetterList[i], false);
 			}
 			mSelectedLetterList.splice(0, mSelectedLetterList.length);
+			
 			RefreshCurrentWord();
+			RefreshButtonColor();
+			RefreshSlotTile();
 		}
 		
 		private function OnRequestSubmit(aEvent:KeyboardManagerEvent):void
 		{
-			if (!stage)
+			if (!stage || mSelectedLetterList.length <= 0)
 			{
 				return;
 			}
@@ -354,6 +462,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 		{
 			var letter:SelectableLetter = aEvent.currentTarget as SelectableLetter;
 			
+			var letterPosition:Point;
 			var i:int, end:int;
 			if (letter.x >= mSelectedLetterSlots[0].x - 40 &&
 				letter.x <= mSelectedLetterSlots[mSelectedLetterSlots.length - 1].x + 40 &&
@@ -379,15 +488,18 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 						continue;
 					}
 					
+					letterPosition =  new Point(0, mSelectedLetterSlots[i].y);
+					
 					if (currentIndex == -1 || i < currentIndex)
 					{
-						mSelectedLetterList[i].x = mSelectedLetterSlots[(i < slotIndex ? i : i + 1)].x;
+						letterPosition.x = mSelectedLetterSlots[(i < slotIndex ? i : i + 1)].x;
 					}
 					else
 					{
-						mSelectedLetterList[i].x = mSelectedLetterSlots[(i > slotIndex ? i : i - 1)].x;
+						letterPosition.x = mSelectedLetterSlots[(i > slotIndex ? i : i - 1)].x;
 					}
-					mSelectedLetterList[i].y = mSelectedLetterSlots[i].y;
+					TweenLite.to(mSelectedLetterList[i], 0.2, { x:letterPosition.x, overwrite:true, ease:Bounce.easeOut } );
+					mSelectedLetterList[i].y = letterPosition.y;
 				}
 			}
 			else
@@ -396,9 +508,23 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 				{
 					if (mSelectedLetterList[i] != letter)
 					{
-						mSelectedLetterList[i].x = mSelectedLetterSlots[i].x;
-						mSelectedLetterList[i].y = mSelectedLetterSlots[i].y;
+						letterPosition = new Point(mSelectedLetterSlots[i].x, mSelectedLetterSlots[i].y);
+						TweenLite.to(mSelectedLetterList[i], 0.2, { x:letterPosition.x, overwrite:true, ease:Bounce.easeOut } );
+						mSelectedLetterList[i].y = letterPosition.y;
 					}
+				}
+			}
+			
+			var offset:int = (mSelectedLetterList.indexOf(letter) == -1 ? 1 : 0);
+			for (i = 0, end = mSelectedLetterSlotTiles.length; i < end; ++i)
+			{
+				if (i < mSelectedLetterList.length + offset)
+				{
+					mSelectedLetterSlotTiles[i].Show();
+				}
+				else
+				{
+					mSelectedLetterSlotTiles[i].Hide();
 				}
 			}
 		}
@@ -488,12 +614,15 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 						mSelectableLetterList.splice(slotIndex, 0, letter);
 					}
 					
-					slot = mSelectableLetterSlots[slotIndex];
+					if (slotIndex != -1)
+					{
+						slot = mSelectableLetterSlots[slotIndex];
+					}
 					for (i = 0, end = mSelectableLetterList.length; i < end; ++i)
 					{
 						if (mSelectableLetterList[i] != null && mSelectableLetterList[i] != letter)
 						{
-							mSelectableLetterList[i].x = mSelectableLetterSlots[i].x;
+							TweenLite.to(mSelectableLetterList[i], 0.2, { x:mSelectableLetterSlots[i].x, overwrite:true, ease:Bounce.easeOut } );
 						}
 					}
 				}
@@ -503,9 +632,14 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 				}
 			}
 			
-			letter.x = slot.x;
-			letter.y = slot.y;
+			if (slot)
+			{
+				TweenLite.to(letter, 0.2, { x:slot.x, y:slot.y, overwrite:true, ease:Bounce.easeOut } );
+			}
+			
 			RefreshCurrentWord();
+			RefreshButtonColor();
+			RefreshSlotTile();
 		}
 		
 		private function OnLetterSelected(aEvent:SelectableLetterEvent):void

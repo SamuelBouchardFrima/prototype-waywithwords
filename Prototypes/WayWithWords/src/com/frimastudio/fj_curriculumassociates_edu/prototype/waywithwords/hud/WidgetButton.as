@@ -7,14 +7,23 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud
 	
 	public class WidgetButton extends Sprite
 	{
+		private var mRect:Rectangle;
+		
+		public function set ButtonColor(aValue:int):void
+		{
+			graphics.beginFill(aValue);
+			graphics.lineStyle(2);
+			graphics.drawRect(mRect.x, mRect.y, mRect.width, mRect.height);
+			graphics.endFill();
+		}
+		
 		public function WidgetButton(aLabel:String, aRect:Rectangle, aColor:int = 0xFFFFFF)
 		{
 			super();
 			
-			graphics.beginFill(aColor);
-			graphics.lineStyle(2);
-			graphics.drawRect(aRect.x, aRect.y, aRect.width, aRect.height);
-			graphics.endFill();
+			mRect = aRect;
+			
+			ButtonColor = aColor;
 			
 			var format:TextFormat = new TextFormat();
 			format.size = aRect.height * 0.75;
