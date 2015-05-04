@@ -45,6 +45,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			mInteractiveObject.y = 100;
 			mInteractiveObject.addEventListener(InteractiveObjectEvent.STATE_CHANGE, OnStateChange);
 			mInteractiveObject.addEventListener(InteractiveObjectEvent.STATE_BLOCK, OnStateBlock);
+			mInteractiveObject.addEventListener(InteractiveObjectEvent.INPUT_SUCCESS, OnInputSuccess);
 			mInteractiveObject.addEventListener(InteractiveObjectEvent.INPUT_ERROR, OnInputError);
 			mInteractiveObject.SetState(0);
 			addChild(mInteractiveObject);
@@ -56,6 +57,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			mInputWidget.removeEventListener(InteractionInputEvent.SUBMIT, OnSubmitInteractionInput);
 			mInteractiveObject.removeEventListener(InteractiveObjectEvent.STATE_CHANGE, OnStateChange);
 			mInteractiveObject.removeEventListener(InteractiveObjectEvent.STATE_BLOCK, OnStateBlock);
+			mInteractiveObject.removeEventListener(InteractiveObjectEvent.INPUT_SUCCESS, OnInputSuccess);
 			mInteractiveObject.removeEventListener(InteractiveObjectEvent.INPUT_ERROR, OnInputError);
 			
 			super.Dispose();
@@ -79,6 +81,11 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 		protected function OnStateBlock(aEvent:InteractiveObjectEvent):void
 		{
 			mNavigationWidget.StateBlocked();
+		}
+		
+		protected function OnInputSuccess(aEvent:InteractiveObjectEvent):void
+		{
+			mInputWidget.InputSuccess();
 		}
 		
 		protected function OnInputError(aEvent:InteractiveObjectEvent):void

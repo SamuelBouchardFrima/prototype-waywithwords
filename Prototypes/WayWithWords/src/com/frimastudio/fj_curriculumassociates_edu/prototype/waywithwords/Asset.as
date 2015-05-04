@@ -41,6 +41,8 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords
 		
 		[Embed(source = "../../../../../../art/ResetIcon.png")]
 		public static var ResetIconBitmap:Class;
+		[Embed(source = "../../../../../../art/SubmitButton.png")]
+		public static var SubmitIconBitmap:Class;
 		[Embed(source = "../../../../../../art/EraserIcon.png")]
 		public static var EraserIconBitmap:Class;
 		

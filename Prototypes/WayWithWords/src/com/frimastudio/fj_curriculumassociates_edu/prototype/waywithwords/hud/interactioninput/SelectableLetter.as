@@ -139,7 +139,10 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 		private function StopDrag():void
 		{
 			removeEventListener(Event.ENTER_FRAME, OnEnterFrame);
-			stage.removeEventListener(MouseEvent.MOUSE_MOVE, OnMouseMove);
+			if (stage)
+			{
+				stage.removeEventListener(MouseEvent.MOUSE_MOVE, OnMouseMove);
+			}
 			mEnableClickTimer.start();
 			
 			mDragAim = null;

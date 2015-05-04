@@ -54,6 +54,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			switch (aInput)
 			{
 				case "fan":
+					DispatchInputSuccess();
 					Inventory.Instance.AddItem(Item.FAN);
 					SetState(1);
 					DispatchStateBlock();
@@ -64,6 +65,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 				case "at":
 				case "fat":
 				case "tan":
+					DispatchInputSuccess();
 					mDialog.text = "I am not a " + aInput + ".\nI am a ___.";
 					DispatchTrivialStateChange();
 					break;

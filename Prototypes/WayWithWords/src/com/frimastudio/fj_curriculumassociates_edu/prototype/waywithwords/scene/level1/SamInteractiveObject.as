@@ -83,12 +83,19 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			switch (aInput)
 			{
 				case "Sam":
+					DispatchInputSuccess();
 					SetState(1);
 					break;
 				case "a":
 				case "am":
+				case "aS":
 				case "at":
+				case "ma":
+				case "maSt":
 				case "mat":
+				case "Sat":
+				case "St":
+					DispatchInputSuccess();
 					mDialog.text = "I am not " + aInput + ".\nI am ___.";
 					DispatchTrivialStateChange();
 					break;
@@ -105,9 +112,11 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			switch (aInput)
 			{
 				case "mad":
+					DispatchInputSuccess();
 					SetState(2);
 					break;
 				case "sad":
+					DispatchInputSuccess();
 					mDialog.text = "I am not sad!\nAm I mad?";
 					DispatchTrivialStateChange();
 					break;
@@ -115,6 +124,8 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 				case "ad":
 				case "am":
 				case "as":
+				case "dam":
+					DispatchInputSuccess();
 					mDialog.text = "I am not " + aInput + "!\nAm I sad or mad?";
 					DispatchTrivialStateChange();
 					break;
@@ -131,6 +142,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			switch (aInput)
 			{
 				case "mat":
+					DispatchInputSuccess();
 					if (Inventory.Instance.HasItem(Item.MAT))
 					{
 						UseItem(Item.MAT);
@@ -144,6 +156,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 					}
 					break;
 				case "fan":
+					DispatchInputSuccess();
 					if (Inventory.Instance.HasItem(Item.FAN))
 					{
 						UseItem(Item.FAN);
@@ -164,6 +177,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 				case "fat":
 				case "man":
 				case "tan":
+					DispatchInputSuccess();
 					mDialog.text = "I do not need a " + aInput + ".\nI need a ___?";
 					DispatchTrivialStateChange();
 					break;
@@ -180,6 +194,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			switch (aInput)
 			{
 				case "fan":
+					DispatchInputSuccess();
 					if (Inventory.Instance.HasItem(Item.FAN))
 					{
 						UseItem(Item.FAN);
@@ -202,6 +217,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 				case "man":
 				case "mat":
 				case "tan":
+					DispatchInputSuccess();
 					mDialog.text = "I do not need a " + aInput + ".\nI need a ___?";
 					DispatchTrivialStateChange();
 					break;
@@ -218,6 +234,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			switch (aInput)
 			{
 				case "mat":
+					DispatchInputSuccess();
 					if (Inventory.Instance.HasItem(Item.MAT))
 					{
 						UseItem(Item.MAT);
@@ -240,6 +257,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 				case "fat":
 				case "man":
 				case "tan":
+					DispatchInputSuccess();
 					mDialog.text = "I do not need a " + aInput + ".\nI need a ___?";
 					DispatchTrivialStateChange();
 					break;

@@ -100,6 +100,11 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 			dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.STATE_BLOCK, mState));
 		}
 		
+		protected function DispatchInputSuccess():void
+		{
+			dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.INPUT_SUCCESS));
+		}
+		
 		protected function DispatchInputError():void
 		{
 			dispatchEvent(new InteractiveObjectEvent(InteractiveObjectEvent.INPUT_ERROR));

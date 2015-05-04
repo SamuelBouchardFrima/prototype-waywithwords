@@ -6,6 +6,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.scene
 	{
 		public static const STATE_CHANGE:String = "InteractiveObjectEvent::STATE_CHANGE";
 		public static const STATE_BLOCK:String = "InteractiveObjectEvent::STATE_BLOCK";
+		public static const INPUT_SUCCESS:String = "InteractiveObjectEvent::INPUT_SUCCESS";
 		public static const INPUT_ERROR:String = "InteractiveObjectEvent::INPUT_ERROR";
 		
 		public var State:InteractiveObjectState;

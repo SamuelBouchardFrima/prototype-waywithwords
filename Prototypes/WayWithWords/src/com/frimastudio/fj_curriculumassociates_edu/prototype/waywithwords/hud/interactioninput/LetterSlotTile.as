@@ -66,6 +66,11 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.hud.i
 		
 		private function OnPulseTimer(aEvent:TimerEvent):void
 		{
+			if (!stage)
+			{
+				return;
+			}
+			
 			TweenLite.to(mTile, 0.8, { alpha:1, ease:Strong.easeIn, delay:mDelay, onComplete:OnFadeInComplete });
 		}
 		

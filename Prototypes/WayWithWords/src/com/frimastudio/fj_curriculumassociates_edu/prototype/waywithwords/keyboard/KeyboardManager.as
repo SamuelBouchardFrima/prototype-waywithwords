@@ -1,9 +1,11 @@
 package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.keyboard
 {
 	import flash.display.Sprite;
+	import flash.display.Stage;
 	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
 	import flash.events.KeyboardEvent;
+	import flash.events.MouseEvent;
 	import flash.ui.Keyboard;
 	
 	public class KeyboardManager extends EventDispatcher implements IKeyboardManager
@@ -15,13 +17,13 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.keybo
 			return mInstance;
 		}
 		
-		private var mKeyboardDispatcher:IEventDispatcher;
+		private var mKeyboardDispatcher:Stage;
 		
-		public function set KeyboardDispatcher(aValue:IEventDispatcher):void
+		public function set KeyboardDispatcher(aValue:Stage):void
 		{
 			mKeyboardDispatcher = aValue;
-			
 			mKeyboardDispatcher.addEventListener(KeyboardEvent.KEY_DOWN, OnKeyDown);
+			mKeyboardDispatcher.addEventListener(MouseEvent.MOUSE_UP, OnMouseUp);
 		}
 		
 		public function KeyboardManager(aTarget:IEventDispatcher = null)
@@ -39,6 +41,7 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.keybo
 			if (mKeyboardDispatcher)
 			{
 				mKeyboardDispatcher.removeEventListener(KeyboardEvent.KEY_DOWN, OnKeyDown);
+				mKeyboardDispatcher.removeEventListener(MouseEvent.MOUSE_UP, OnMouseUp);
 			}
 		}
 		
@@ -62,6 +65,11 @@ package com.frimastudio.fj_curriculumassociates_edu.prototype.waywithwords.keybo
 					dispatchEvent(new KeyboardManagerEvent(KeyboardManagerEvent.TYPE, String.fromCharCode(aEvent.charCode)));
 					break;
 			}
+		}
+		
+		private function OnMouseUp(aEvent:MouseEvent):void
+		{
+			mKeyboardDispatcher.focus = mKeyboardDispatcher;
 		}
 	}
 }
